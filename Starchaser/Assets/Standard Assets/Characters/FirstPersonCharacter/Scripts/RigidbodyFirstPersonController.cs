@@ -90,6 +90,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded, m_ChargingJump;
         private int m_ConsecutiveJumpsMade = 0;
         private Vector3 m_PreChargeVelocity = Vector3.zero;
+        private float m_ChargeDurationForMaxPower = 1.0f, m_CurrentChargeDuration = 0;
 
 
         public Vector3 Velocity
@@ -136,6 +137,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_ChargingJump = true;
             }
+            else if (m_ChargingJump)
+            {
+                m_CurrentChargeDuration += Time.deltaTime;
+                Debug.Log(m_CurrentChargeDuration);
+            }
             if (CrossPlatformInputManager.GetButtonUp("Jump") && m_ChargingJump && !m_Jump)
             {
                 m_Jump = true;
@@ -174,9 +180,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     m_RigidBody.drag = 0f;
                     m_RigidBody.velocity = 
                         new Vector3(m_RigidBody.velocity.x + m_PreChargeVelocity.x, 0f, m_RigidBody.velocity.z + m_PreChargeVelocity.z);
-                    m_RigidBody.AddForce(new Vector3(0f, movementSettings.JumpForce, 0f), ForceMode.Impulse);
+                    m_RigidBody.AddForce(new Vector3(0f, 
+                        movementSettings.JumpForce * Mathf.Clamp(m_CurrentChargeDuration + 0.9f, 1, 1 + m_ChargeDurationForMaxPower), 0f), 
+                        ForceMode.Impulse);
                     m_Jumping = true;
                     m_PreChargeVelocity = Vector3.zero;
+                    m_CurrentChargeDuration = 0;
                     m_ConsecutiveJumpsMade++;
                 }
 
@@ -198,15 +207,18 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     m_RigidBody.drag = 0f;
                     m_RigidBody.velocity = 
                         new Vector3(m_RigidBody.velocity.x + m_PreChargeVelocity.x, 0f, m_RigidBody.velocity.z + m_PreChargeVelocity.z);
-                    m_RigidBody.AddForce(new Vector3(0f, movementSettings.JumpForce, 0f), ForceMode.Impulse);
+                    m_RigidBody.AddForce(new Vector3(0f,
+                        movementSettings.JumpForce * Mathf.Clamp(m_CurrentChargeDuration + 0.9f, 1, 1 + m_ChargeDurationForMaxPower), 0f),
+                        ForceMode.Impulse);
                     m_Jumping = true;
                     m_PreChargeVelocity = Vector3.zero;
+                    m_CurrentChargeDuration = 0;
                     m_ConsecutiveJumpsMade++;
                 }
             }
             m_Jump = false;
 
-            if (m_ChargingJump)
+            if (m_ChargingJump && m_CurrentChargeDuration > 0.1f)//quick jump press should not slow down the character
             {
                 if (m_PreChargeVelocity == Vector3.zero)//it should be resest to 0,0,0 after every jump
                 {
