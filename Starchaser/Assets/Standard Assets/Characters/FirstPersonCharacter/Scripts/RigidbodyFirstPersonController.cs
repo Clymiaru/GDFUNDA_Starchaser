@@ -87,7 +87,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private CapsuleCollider m_Capsule;
         private float m_YRotation;
         private Vector3 m_GroundContactNormal;
-        private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
+        private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded, m_ChargingJump;
+        private int m_ConsecutiveJumpsMade = 0;
+        private Vector3 m_PreChargeVelocity = Vector3.zero;
 
 
         public Vector3 Velocity
@@ -130,9 +132,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             RotateView();
 
-            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
+            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_ChargingJump && m_ConsecutiveJumpsMade < 2)
+            {
+                m_ChargingJump = true;
+            }
+            if (CrossPlatformInputManager.GetButtonUp("Jump") && m_ChargingJump && !m_Jump)
             {
                 m_Jump = true;
+                m_ChargingJump = false;
             }
         }
 
@@ -165,9 +172,12 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 if (m_Jump)
                 {
                     m_RigidBody.drag = 0f;
-                    m_RigidBody.velocity = new Vector3(m_RigidBody.velocity.x, 0f, m_RigidBody.velocity.z);
+                    m_RigidBody.velocity = 
+                        new Vector3(m_RigidBody.velocity.x + m_PreChargeVelocity.x, 0f, m_RigidBody.velocity.z + m_PreChargeVelocity.z);
                     m_RigidBody.AddForce(new Vector3(0f, movementSettings.JumpForce, 0f), ForceMode.Impulse);
                     m_Jumping = true;
+                    m_PreChargeVelocity = Vector3.zero;
+                    m_ConsecutiveJumpsMade++;
                 }
 
                 if (!m_Jumping && Mathf.Abs(input.x) < float.Epsilon && Mathf.Abs(input.y) < float.Epsilon && m_RigidBody.velocity.magnitude < 1f)
@@ -182,8 +192,28 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 {
                     StickToGroundHelper();
                 }
+
+                if (m_Jump)
+                {
+                    m_RigidBody.drag = 0f;
+                    m_RigidBody.velocity = 
+                        new Vector3(m_RigidBody.velocity.x + m_PreChargeVelocity.x, 0f, m_RigidBody.velocity.z + m_PreChargeVelocity.z);
+                    m_RigidBody.AddForce(new Vector3(0f, movementSettings.JumpForce, 0f), ForceMode.Impulse);
+                    m_Jumping = true;
+                    m_PreChargeVelocity = Vector3.zero;
+                    m_ConsecutiveJumpsMade++;
+                }
             }
             m_Jump = false;
+
+            if (m_ChargingJump)
+            {
+                if (m_PreChargeVelocity == Vector3.zero)//it should be resest to 0,0,0 after every jump
+                {
+                    m_PreChargeVelocity = m_RigidBody.velocity;
+                }
+                m_RigidBody.velocity *= 0.5f;
+            }
         }
 
 
@@ -250,6 +280,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_IsGrounded = true;
                 m_GroundContactNormal = hitInfo.normal;
+                m_ConsecutiveJumpsMade = 0;
             }
             else
             {
