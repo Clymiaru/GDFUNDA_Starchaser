@@ -33,11 +33,33 @@ namespace UnityStandardAssets.Characters.FirstPerson
             float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
             float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
 
-            m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
-            m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);
+            m_CharacterTargetRot = Quaternion.Euler(character.rotation.eulerAngles.x, m_CharacterTargetRot.eulerAngles.y,
+                                                        character.rotation.eulerAngles.z);
 
-            if(clampVerticalRotation)
-                m_CameraTargetRot = ClampRotationAroundXAxis (m_CameraTargetRot);
+            /*if (character.rotation.eulerAngles.z < 30 && character.rotation.eulerAngles.z > -30)
+            {
+                if (character.rotation.eulerAngles.x < 30 && character.rotation.eulerAngles.x > -30)
+                    m_CharacterTargetRot *= Quaternion.Euler(0, yRot, 0);
+            }
+            else if (character.rotation.eulerAngles.y < -60 && character.rotation.eulerAngles.y > -120)
+            {
+                if (character.rotation.eulerAngles.z < 120 && character.rotation.eulerAngles.z > 60)
+                    m_CharacterTargetRot *= Quaternion.Euler(-yRot, 0, 0);
+                if (character.rotation.eulerAngles.z < 300 && character.rotation.eulerAngles.z > 240)
+                    m_CharacterTargetRot *= Quaternion.Euler(-yRot, 0, 0);
+            }
+            else if (character.rotation.eulerAngles.z < 120 && character.rotation.eulerAngles.z > 60)
+            {
+                m_CharacterTargetRot *= Quaternion.Euler(-yRot, 0, 0);
+            }
+            else if (character.rotation.eulerAngles.z < 300 && character.rotation.eulerAngles.z > 240)
+                m_CharacterTargetRot *= Quaternion.Euler(yRot, 0, 0);*/
+
+            //m_CharacterTargetRot *= Quaternion.Euler(0f, yRot, 0f);            
+            m_CameraTargetRot *= Quaternion.Euler (-xRot, yRot, 0f);
+
+            //if(clampVerticalRotation)
+            //    m_CameraTargetRot = ClampRotationAroundXAxis (m_CameraTargetRot);
 
             if(smooth)
             {
