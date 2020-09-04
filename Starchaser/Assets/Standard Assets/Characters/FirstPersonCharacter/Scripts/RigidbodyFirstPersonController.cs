@@ -87,10 +87,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private CapsuleCollider m_Capsule;
         private float m_YRotation;
         private Vector3 m_GroundContactNormal;
-        private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded, m_ChargingJump;
-        private int m_ConsecutiveJumpsMade = 0;
-        private Vector3 m_PreChargeVelocity = Vector3.zero;
-        private float m_ChargeDurationForMaxPower = 1.0f, m_CurrentChargeDuration = 0;
+        private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
+        private int m_JumpCount;
 
 
         public Vector3 Velocity
@@ -133,18 +131,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             RotateView();
 
-            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_ChargingJump && m_ConsecutiveJumpsMade < 2)
-            {
-                m_ChargingJump = true;
-            }
-            else if (m_ChargingJump)
-            {
-                m_CurrentChargeDuration += Time.deltaTime;
-            }
-            if (CrossPlatformInputManager.GetButtonUp("Jump") && m_ChargingJump && !m_Jump)
+            if (CrossPlatformInputManager.GetButtonDown("Jump") && !m_Jump)
             {
                 m_Jump = true;
-                m_ChargingJump = false;
             }
         }
 
@@ -166,9 +155,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 if (m_RigidBody.velocity.sqrMagnitude <
                     (movementSettings.CurrentTargetSpeed*movementSettings.CurrentTargetSpeed))
                 {
-                    desiredMove = new Vector3(desiredMove.x, 
-                                                desiredMove.y + desiredMove.z * Mathf.Sin(Mathf.Deg2Rad * this.transform.rotation.eulerAngles.x), 
-                                                desiredMove.z * Mathf.Cos(Mathf.Deg2Rad * this.transform.rotation.eulerAngles.x));
                     m_RigidBody.AddForce(desiredMove*SlopeMultiplier(), ForceMode.Impulse);
                 }
             }
@@ -180,15 +166,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 if (m_Jump)
                 {
                     m_RigidBody.drag = 0f;
-                    m_RigidBody.velocity = 
-                        new Vector3(m_RigidBody.velocity.x + m_PreChargeVelocity.x, 0f, m_RigidBody.velocity.z + m_PreChargeVelocity.z);
-                    m_RigidBody.AddForce(transform.TransformDirection(new Vector3(0f, 
-                        movementSettings.JumpForce * Mathf.Clamp(m_CurrentChargeDuration + 0.9f, 1, 1 + m_ChargeDurationForMaxPower), 0f)), 
-                        ForceMode.Impulse);
+                    m_RigidBody.velocity = new Vector3(m_RigidBody.velocity.x, 0f, m_RigidBody.velocity.z);
+                    m_RigidBody.AddForce(new Vector3(0f, movementSettings.JumpForce, 0f), ForceMode.Impulse);
                     m_Jumping = true;
-                    m_PreChargeVelocity = Vector3.zero;
-                    m_CurrentChargeDuration = 0;
-                    m_ConsecutiveJumpsMade++;
                 }
 
                 if (!m_Jumping && Mathf.Abs(input.x) < float.Epsilon && Mathf.Abs(input.y) < float.Epsilon && m_RigidBody.velocity.magnitude < 1f)
@@ -203,37 +183,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 {
                     StickToGroundHelper();
                 }
-
-                if (m_Jump)
-                {
-                    m_RigidBody.drag = 0f;
-                    m_RigidBody.velocity = 
-                        new Vector3(m_RigidBody.velocity.x + m_PreChargeVelocity.x, 0f, m_RigidBody.velocity.z + m_PreChargeVelocity.z);
-                    m_RigidBody.AddForce(transform.TransformDirection(new Vector3(0f,
-                        movementSettings.JumpForce * Mathf.Clamp(m_CurrentChargeDuration + 0.9f, 1, 1 + m_ChargeDurationForMaxPower), 0f)),
-                        ForceMode.Impulse);
-                    m_Jumping = true;
-                    m_PreChargeVelocity = Vector3.zero;
-                    m_CurrentChargeDuration = 0;
-                    m_ConsecutiveJumpsMade++;
-                }
             }
             m_Jump = false;
-
-            if (m_ChargingJump && m_CurrentChargeDuration > 0.1f)//quick jump press should not slow down the character
-            {
-                if (m_PreChargeVelocity == Vector3.zero)//it should be resest to 0,0,0 after every jump
-                {
-                    m_PreChargeVelocity = m_RigidBody.velocity;
-                }
-                m_RigidBody.velocity *= 0.5f;
-            }
         }
 
 
         private float SlopeMultiplier()
         {
-            float angle = Vector3.Angle(m_GroundContactNormal, transform.TransformDirection(Vector3.up));
+            float angle = Vector3.Angle(m_GroundContactNormal, Vector3.up);
             return movementSettings.SlopeCurveModifier.Evaluate(angle);
         }
 
@@ -289,19 +246,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             m_PreviouslyGrounded = m_IsGrounded;
             RaycastHit hitInfo;
-            if (Physics.SphereCast(transform.position, m_Capsule.radius * (1.0f - advancedSettings.shellOffset), 
-                                    transform.TransformDirection(Vector3.down), out hitInfo,
-                                   ((m_Capsule.height/2f) - m_Capsule.radius) + advancedSettings.groundCheckDistance, 
-                                   Physics.AllLayers, QueryTriggerInteraction.Ignore))
+            if (Physics.SphereCast(transform.position, m_Capsule.radius * (1.0f - advancedSettings.shellOffset), Vector3.down, out hitInfo,
+                                   ((m_Capsule.height/2f) - m_Capsule.radius) + advancedSettings.groundCheckDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
             {
                 m_IsGrounded = true;
                 m_GroundContactNormal = hitInfo.normal;
-                m_ConsecutiveJumpsMade = 0;
             }
             else
             {
                 m_IsGrounded = false;
-                m_GroundContactNormal = transform.TransformDirection(Vector3.up);
+                m_GroundContactNormal = Vector3.up;
             }
             if (!m_PreviouslyGrounded && m_IsGrounded && m_Jumping)
             {

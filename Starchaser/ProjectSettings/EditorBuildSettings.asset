@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Floors/Floor3.unity
-    guid: 93c50923ff9ad9f40b212dec55b09829
-  - enabled: 1
-    path: Assets/Scenes/Floors/Floor8.unity
-    guid: 389d8aa96ce73794da91e92e756fa322
+    path: Assets/Scenes/TrailerWhiteRoom.unity
+    guid: 766278c0ed344684ea350c2b4e147a3f
   m_configObjects: {}
