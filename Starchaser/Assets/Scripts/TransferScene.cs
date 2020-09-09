@@ -7,16 +7,9 @@ public class TransferScene : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name);
+        Debug.Log("Quit");
 
-        if (SceneManager.GetActiveScene().name == "Floor3")
-        {
-            SceneManager.LoadScene("Floor8");
-        }
-        else
-        {
-            Application.Quit();
-        }
+        Application.Quit();
     }
 
 
