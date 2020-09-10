@@ -7,36 +7,26 @@ public class GravityWall : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        if (Physics.gravity != transform.TransformDirection(Vector3.down * 9.8f))
+        if (Physics.gravity != transform.TransformDirection(Vector3.down * 9.81f))
         {
             if (collision.collider.GetComponent<UnityStandardAssets.Characters.ThirdPerson.ThirdPersonUserControl>() != null)
             {
-                Physics.gravity = transform.TransformDirection(Vector3.down * 9.8f);
-                /*if (this.transform.rotation.eulerAngles.x == 90)
-                {
-                    collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(-collision.collider.GetComponent<Transform>().rotation.eulerAngles.y - 90,
-                    -90, 270);
-                }
-                else if (this.transform.rotation.eulerAngles.x == 270)
-                {
-                    collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(-collision.collider.GetComponent<Transform>().rotation.eulerAngles.y - 90,
-                    -90, 90);
-                }*/
+                Physics.gravity = transform.TransformDirection(Vector3.down * 9.81f);
                 if (this.transform.rotation.eulerAngles.z == 90)
                 {
                     if (this.transform.rotation.eulerAngles.y == 180)
                     {
-                        collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(-collision.collider.GetComponent<Transform>().rotation.eulerAngles.y,
+                        collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(collision.collider.GetComponent<Transform>().rotation.eulerAngles.y,
                         0, 270);
                     }
                     else if (this.transform.rotation.eulerAngles.y == 270)
                     {
-                        collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(collision.collider.GetComponent<Transform>().rotation.eulerAngles.y,
+                        collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(collision.collider.GetComponent<Transform>().rotation.eulerAngles.y - 90,
                             -90, 90);
                     }
                     else if (this.transform.rotation.eulerAngles.y == 90)
                     {
-                        collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(collision.collider.GetComponent<Transform>().rotation.eulerAngles.y,
+                        collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(-collision.collider.GetComponent<Transform>().rotation.eulerAngles.y + 90,
                             90, 90);
                     }
                     else

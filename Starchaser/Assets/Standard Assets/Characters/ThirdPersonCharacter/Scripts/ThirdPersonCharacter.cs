@@ -107,7 +107,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				Ray crouchRay = new Ray(m_Rigidbody.position + transform.TransformDirection(Vector3.up) * m_Capsule.radius * k_Half, transform.TransformDirection(Vector3.up));
 				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
-				Debug.DrawRay(m_Rigidbody.position + transform.TransformDirection(Vector3.up) * m_Capsule.radius * k_Half, transform.TransformDirection(Vector3.up) * crouchRayLength, Color.yellow, 10);
 				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
 				{					
 					m_Crouching = true;
@@ -160,7 +159,34 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			Vector3 extraGravityForce = (Physics.gravity * m_GravityMultiplier) - Physics.gravity;
 			m_Rigidbody.AddForce(extraGravityForce);
 
-			m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.01f;
+			if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
+				m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.01f;
+			else if (transform.rotation.eulerAngles.z > 80 && transform.rotation.eulerAngles.z < 100)
+			{
+				if (transform.rotation.eulerAngles.y > -10 && transform.rotation.eulerAngles.y < 10)
+					m_GroundCheckDistance = m_Rigidbody.velocity.x > 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (transform.rotation.eulerAngles.y > 170 && transform.rotation.eulerAngles.y < 190)
+					m_GroundCheckDistance = m_Rigidbody.velocity.x < 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (transform.rotation.eulerAngles.y > 80 && transform.rotation.eulerAngles.y < 100)
+					m_GroundCheckDistance = m_Rigidbody.velocity.z < 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (transform.rotation.eulerAngles.y > 260 && transform.rotation.eulerAngles.y < 280)
+					m_GroundCheckDistance = m_Rigidbody.velocity.z > 0 ? m_OrigGroundCheckDistance : 0.01f;
+			}
+			else if (this.transform.rotation.eulerAngles.z > 260 && this.transform.rotation.eulerAngles.z < 280)
+			{
+				if (this.transform.eulerAngles.y > -10 && this.transform.rotation.eulerAngles.y < 10)
+					m_GroundCheckDistance = m_Rigidbody.velocity.x < 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (this.transform.eulerAngles.y > 260 && this.transform.rotation.eulerAngles.y < 280)
+					m_GroundCheckDistance = m_Rigidbody.velocity.z < 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (this.transform.eulerAngles.y > 170 && this.transform.rotation.eulerAngles.y < 190)
+					m_GroundCheckDistance = m_Rigidbody.velocity.x > 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (this.transform.eulerAngles.y > 80 && this.transform.rotation.eulerAngles.y < 100)
+					m_GroundCheckDistance = m_Rigidbody.velocity.z > 0 ? m_OrigGroundCheckDistance : 0.01f;
+			}
+			else if (this.transform.rotation.eulerAngles.z > 170 && this.transform.rotation.eulerAngles.z < 190)
+			{
+				m_GroundCheckDistance = m_Rigidbody.velocity.y > 0 ? m_OrigGroundCheckDistance : 0.01f;
+			}
 		}
 
 
@@ -170,7 +196,34 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
 			{
 				// jump!
-				m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
+				if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
+					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
+				else if (transform.rotation.eulerAngles.z > 80 && transform.rotation.eulerAngles.z < 100)
+                {
+					if (transform.rotation.eulerAngles.y > -10 && transform.rotation.eulerAngles.y < 10)
+						m_Rigidbody.velocity = new Vector3(-m_JumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+					else if (transform.rotation.eulerAngles.y > 170 && transform.rotation.eulerAngles.y < 190)
+						m_Rigidbody.velocity = new Vector3(m_JumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+					else if (transform.rotation.eulerAngles.y > 80 && transform.rotation.eulerAngles.y < 100)
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, m_JumpPower);
+					else if (transform.rotation.eulerAngles.y > 260 && transform.rotation.eulerAngles.y < 280)
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, -m_JumpPower);
+				}
+				else if (this.transform.rotation.eulerAngles.z > 260 && this.transform.rotation.eulerAngles.z < 280)
+				{
+					if (this.transform.eulerAngles.y > -10 && this.transform.rotation.eulerAngles.y < 10)
+						m_Rigidbody.velocity = new Vector3(m_JumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+					else if (this.transform.eulerAngles.y > 260 && this.transform.rotation.eulerAngles.y < 280)
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, m_JumpPower);
+					else if (this.transform.eulerAngles.y > 170 && this.transform.rotation.eulerAngles.y < 190)
+						m_Rigidbody.velocity = new Vector3(-m_JumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+					else if (this.transform.eulerAngles.y > 80 && this.transform.rotation.eulerAngles.y < 100)
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, -m_JumpPower);
+				}
+				else if (this.transform.rotation.eulerAngles.z > 170 && this.transform.rotation.eulerAngles.z < 190)
+				{
+					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -m_JumpPower, m_Rigidbody.velocity.z);
+				}
 				m_IsGrounded = false;
 				m_Animator.applyRootMotion = false;
 				m_GroundCheckDistance = 0.1f;

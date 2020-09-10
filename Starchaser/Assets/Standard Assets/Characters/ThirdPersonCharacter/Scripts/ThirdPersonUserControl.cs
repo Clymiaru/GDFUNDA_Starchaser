@@ -84,8 +84,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 }
                 else if (this.transform.rotation.eulerAngles.z > 170 && this.transform.rotation.eulerAngles.z < 190)
                 {
-                    if (this.transform.rotation.eulerAngles.y > 170 && this.transform.rotation.eulerAngles.y < 190)
-                        m_Move = v * Vector3.forward + h * Vector3.right;
+                    m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
+                    m_Move = v * m_CamForward + h * m_Cam.right;
                 }
                 else
                 {
