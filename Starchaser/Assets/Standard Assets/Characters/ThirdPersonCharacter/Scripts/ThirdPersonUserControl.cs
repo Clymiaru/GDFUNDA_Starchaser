@@ -39,6 +39,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
             }
+            else
+            {
+                m_Jump = !CrossPlatformInputManager.GetButtonUp("Jump");
+            }
         }
 
 
@@ -51,25 +55,62 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             bool crouch = Input.GetKey(KeyCode.C);
 
             // calculate move direction to pass to character
+
             if (m_Cam != null)
             {
-                // calculate camera relative direction to move:
-                m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
-                m_Move = v*m_CamForward + h*m_Cam.right;
+                if (this.transform.rotation.eulerAngles.z > -10 && this.transform.rotation.eulerAngles.z < 10)
+                {
+                    // calculate camera relative direction to move:
+                    m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
+                    m_Move = v * m_CamForward + h * m_Cam.right;
+                }               
+                else if (this.transform.rotation.eulerAngles.z > 80 && this.transform.rotation.eulerAngles.z < 100)
+                {
+                    if (this.transform.eulerAngles.y > -10 && this.transform.rotation.eulerAngles.y < 10)
+                        m_Move = v * Vector3.up + h * Vector3.back;
+                    else if (this.transform.eulerAngles.y > 260 && this.transform.rotation.eulerAngles.y < 280)
+                        m_Move = v * Vector3.up + h * Vector3.right;
+                    else if (this.transform.eulerAngles.y > 170 && this.transform.rotation.eulerAngles.y < 190)
+                        m_Move = v * Vector3.up + h * Vector3.forward;
+                    else if (this.transform.eulerAngles.y > 80 && this.transform.rotation.eulerAngles.y < 100)
+                        m_Move = v * Vector3.up + h * Vector3.left;
+                }
+                else if (this.transform.rotation.eulerAngles.z > 260 && this.transform.rotation.eulerAngles.z < 280)
+                {
+                    if (this.transform.eulerAngles.y > -10 && this.transform.rotation.eulerAngles.y < 10)
+                        m_Move = v * Vector3.up + h * Vector3.forward;
+                    else if (this.transform.eulerAngles.y > 260 && this.transform.rotation.eulerAngles.y < 280)
+                        m_Move = v * Vector3.up + h * Vector3.left;
+                    else if (this.transform.eulerAngles.y > 170 && this.transform.rotation.eulerAngles.y < 190)
+                        m_Move = v * Vector3.up + h * Vector3.back;
+                    else if (this.transform.eulerAngles.y > 80 && this.transform.rotation.eulerAngles.y < 100)
+                        m_Move = v * Vector3.up + h * Vector3.right;
+                }
+                else if (this.transform.rotation.eulerAngles.z > 170 && this.transform.rotation.eulerAngles.z < 190)
+                {
+                    m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
+                    m_Move = v * m_CamForward + h * m_Cam.right;
+                }
+                else
+                {
+                    Debug.Log("What");
+                    Debug.Log(this.transform.rotation.eulerAngles);
+                }
             }
             else
             {
                 // we use world-relative directions in the case of no main camera
-                m_Move = v*Vector3.forward + h*Vector3.right;
+                m_Move = v * Vector3.forward + h * Vector3.right;
             }
-#if !MOBILE_INPUT
-			// walk speed multiplier
-	        if (Input.GetKey(KeyCode.LeftShift)) m_Move *= 0.5f;
-#endif
 
+#if !MOBILE_INPUT
+            // walk speed multiplier
+            if (Input.GetKey(KeyCode.LeftShift)) m_Move *= 0.5f;
+#endif
+            
             // pass all parameters to the character control script
             m_Character.Move(m_Move, crouch, m_Jump);
-            m_Jump = false;
+            //m_Jump = false;
         }
     }
 }

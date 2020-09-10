@@ -29,6 +29,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
 
+		int m_JumpCount = 0;
+		float m_MaxChargeJumpDuration = 1.0f;
+		bool m_ChargingJump = false;
+		float m_currentChargeDuration = 0;
 
 		void Start()
 		{
@@ -45,14 +49,19 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public void Move(Vector3 move, bool crouch, bool jump)
 		{
-
+			if (m_ChargingJump)
+			{
+				move /= 5;
+				m_currentChargeDuration += Time.deltaTime;
+				m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y / 5, m_Rigidbody.velocity.z);
+			}
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
 			if (move.magnitude > 1f) move.Normalize();
 			move = transform.InverseTransformDirection(move);
 			CheckGroundStatus();
-			move = Vector3.ProjectOnPlane(move, m_GroundNormal);
+			move = Vector3.ProjectOnPlane(move, Vector3.up);
 			m_TurnAmount = Mathf.Atan2(move.x, move.z);
 			m_ForwardAmount = move.z;
 
@@ -65,7 +74,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else
 			{
-				HandleAirborneMovement();
+				HandleAirborneMovement(jump);
 			}
 
 			ScaleCapsuleForCrouching(crouch);
@@ -87,7 +96,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else
 			{
-				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
+				Ray crouchRay = new Ray(m_Rigidbody.position + transform.TransformDirection(Vector3.up) * m_Capsule.radius * k_Half, transform.TransformDirection(Vector3.up));
 				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
 				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
 				{
@@ -105,10 +114,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// prevent standing up in crouch-only zones
 			if (!m_Crouching)
 			{
-				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
+				Ray crouchRay = new Ray(m_Rigidbody.position + transform.TransformDirection(Vector3.up) * m_Capsule.radius * k_Half, transform.TransformDirection(Vector3.up));
 				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
 				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-				{
+				{					
 					m_Crouching = true;
 				}
 			}
@@ -153,26 +162,89 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		}
 
 
-		void HandleAirborneMovement()
+		void HandleAirborneMovement(bool jump)
 		{
 			// apply extra gravity from multiplier:
 			Vector3 extraGravityForce = (Physics.gravity * m_GravityMultiplier) - Physics.gravity;
 			m_Rigidbody.AddForce(extraGravityForce);
 
-			m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.01f;
+			if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
+				m_GroundCheckDistance = m_Rigidbody.velocity.y < 0 ? m_OrigGroundCheckDistance : 0.01f;
+			else if (transform.rotation.eulerAngles.z > 80 && transform.rotation.eulerAngles.z < 100)
+			{
+				if (transform.rotation.eulerAngles.y > -10 && transform.rotation.eulerAngles.y < 10)
+					m_GroundCheckDistance = m_Rigidbody.velocity.x > 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (transform.rotation.eulerAngles.y > 170 && transform.rotation.eulerAngles.y < 190)
+					m_GroundCheckDistance = m_Rigidbody.velocity.x < 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (transform.rotation.eulerAngles.y > 80 && transform.rotation.eulerAngles.y < 100)
+					m_GroundCheckDistance = m_Rigidbody.velocity.z < 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (transform.rotation.eulerAngles.y > 260 && transform.rotation.eulerAngles.y < 280)
+					m_GroundCheckDistance = m_Rigidbody.velocity.z > 0 ? m_OrigGroundCheckDistance : 0.01f;
+			}
+			else if (this.transform.rotation.eulerAngles.z > 260 && this.transform.rotation.eulerAngles.z < 280)
+			{
+				if (this.transform.eulerAngles.y > -10 && this.transform.rotation.eulerAngles.y < 10)
+					m_GroundCheckDistance = m_Rigidbody.velocity.x < 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (this.transform.eulerAngles.y > 260 && this.transform.rotation.eulerAngles.y < 280)
+					m_GroundCheckDistance = m_Rigidbody.velocity.z < 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (this.transform.eulerAngles.y > 170 && this.transform.rotation.eulerAngles.y < 190)
+					m_GroundCheckDistance = m_Rigidbody.velocity.x > 0 ? m_OrigGroundCheckDistance : 0.01f;
+				else if (this.transform.eulerAngles.y > 80 && this.transform.rotation.eulerAngles.y < 100)
+					m_GroundCheckDistance = m_Rigidbody.velocity.z > 0 ? m_OrigGroundCheckDistance : 0.01f;
+			}
+			else if (this.transform.rotation.eulerAngles.z > 170 && this.transform.rotation.eulerAngles.z < 190)
+			{
+				m_GroundCheckDistance = m_Rigidbody.velocity.y > 0 ? m_OrigGroundCheckDistance : 0.01f;
+			}
+
+			HandleGroundedMovement(false, jump);
 		}
 
 
 		void HandleGroundedMovement(bool crouch, bool jump)
 		{
 			// check whether conditions are right to allow a jump:
-			if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
+			//if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
+			if (!m_ChargingJump && jump)
+				m_ChargingJump = true;
+			else if (!jump && m_ChargingJump && !crouch && m_JumpCount < 2)
 			{
+				float chargedJumpPower = 1 + Mathf.Clamp(m_currentChargeDuration, 0, m_MaxChargeJumpDuration);
 				// jump!
-				m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
+				if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
+					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.z);
+				else if (transform.rotation.eulerAngles.z > 80 && transform.rotation.eulerAngles.z < 100)
+                {
+					if (transform.rotation.eulerAngles.y > -10 && transform.rotation.eulerAngles.y < 10)
+						m_Rigidbody.velocity = new Vector3(-m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+					else if (transform.rotation.eulerAngles.y > 170 && transform.rotation.eulerAngles.y < 190)
+						m_Rigidbody.velocity = new Vector3(m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+					else if (transform.rotation.eulerAngles.y > 80 && transform.rotation.eulerAngles.y < 100)
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, m_JumpPower * chargedJumpPower);
+					else if (transform.rotation.eulerAngles.y > 260 && transform.rotation.eulerAngles.y < 280)
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, -m_JumpPower * chargedJumpPower);
+				}
+				else if (this.transform.rotation.eulerAngles.z > 260 && this.transform.rotation.eulerAngles.z < 280)
+				{
+					if (this.transform.eulerAngles.y > -10 && this.transform.rotation.eulerAngles.y < 10)
+						m_Rigidbody.velocity = new Vector3(m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+					else if (this.transform.eulerAngles.y > 260 && this.transform.rotation.eulerAngles.y < 280)
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, m_JumpPower * chargedJumpPower);
+					else if (this.transform.eulerAngles.y > 170 && this.transform.rotation.eulerAngles.y < 190)
+						m_Rigidbody.velocity = new Vector3(-m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+					else if (this.transform.eulerAngles.y > 80 && this.transform.rotation.eulerAngles.y < 100)
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, -m_JumpPower * chargedJumpPower);
+				}
+				else if (this.transform.rotation.eulerAngles.z > 170 && this.transform.rotation.eulerAngles.z < 190)
+				{
+					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.z);
+				}
 				m_IsGrounded = false;
 				m_Animator.applyRootMotion = false;
 				m_GroundCheckDistance = 0.1f;
+				m_JumpCount++;
+				m_ChargingJump = false;
+				m_currentChargeDuration = 0;
 			}
 		}
 
@@ -180,7 +252,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			// help the character turn faster (this is in addition to root rotation in the animation)
 			float turnSpeed = Mathf.Lerp(m_StationaryTurnSpeed, m_MovingTurnSpeed, m_ForwardAmount);
-			transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
+			transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0, Space.Self);
 		}
 
 
@@ -193,7 +265,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				Vector3 v = (m_Animator.deltaPosition * m_MoveSpeedMultiplier) / Time.deltaTime;
 
 				// we preserve the existing y part of the current velocity.
-				v.y = m_Rigidbody.velocity.y;
+				//v.y = m_Rigidbody.velocity.y;
 				m_Rigidbody.velocity = v;
 			}
 		}
@@ -204,20 +276,23 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			RaycastHit hitInfo;
 #if UNITY_EDITOR
 			// helper to visualise the ground check ray in the scene view
-			Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * m_GroundCheckDistance));
+			Debug.DrawLine(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), 
+				transform.position + (transform.TransformDirection(Vector3.up) * 0.1f) + 
+				(transform.TransformDirection(Vector3.down) * m_GroundCheckDistance), Color.green, 1);
 #endif
 			// 0.1f is a small offset to start the ray from inside the character
 			// it is also good to note that the transform position in the sample assets is at the base of the character
-			if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
+			if (Physics.Raycast(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), transform.TransformDirection(Vector3.down), out hitInfo, m_GroundCheckDistance))
 			{
 				m_GroundNormal = hitInfo.normal;
 				m_IsGrounded = true;
 				m_Animator.applyRootMotion = true;
+				m_JumpCount = 0;
 			}
 			else
 			{
 				m_IsGrounded = false;
-				m_GroundNormal = Vector3.up;
+				m_GroundNormal = transform.TransformDirection(Vector3.up);
 				m_Animator.applyRootMotion = false;
 			}
 		}
