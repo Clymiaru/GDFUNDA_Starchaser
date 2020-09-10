@@ -29,6 +29,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		CapsuleCollider m_Capsule;
 		bool m_Crouching;
 
+		int m_JumpCount = 0;
+		float m_MaxChargeJumpDuration = 1.0f;
+		bool m_ChargingJump = false;
+		float m_currentChargeDuration = 0;
 
 		void Start()
 		{
@@ -45,7 +49,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		public void Move(Vector3 move, bool crouch, bool jump)
 		{
-
+			if (m_ChargingJump)
+			{
+				move /= 5;
+				m_currentChargeDuration += Time.deltaTime;
+				m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y / 5, m_Rigidbody.velocity.z);
+			}
 			// convert the world relative moveInput vector into a local-relative
 			// turn amount and forward amount required to head in the desired
 			// direction.
@@ -65,7 +74,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else
 			{
-				HandleAirborneMovement();
+				HandleAirborneMovement(jump);
 			}
 
 			ScaleCapsuleForCrouching(crouch);
@@ -153,7 +162,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		}
 
 
-		void HandleAirborneMovement()
+		void HandleAirborneMovement(bool jump)
 		{
 			// apply extra gravity from multiplier:
 			Vector3 extraGravityForce = (Physics.gravity * m_GravityMultiplier) - Physics.gravity;
@@ -187,46 +196,55 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				m_GroundCheckDistance = m_Rigidbody.velocity.y > 0 ? m_OrigGroundCheckDistance : 0.01f;
 			}
+
+			HandleGroundedMovement(false, jump);
 		}
 
 
 		void HandleGroundedMovement(bool crouch, bool jump)
 		{
 			// check whether conditions are right to allow a jump:
-			if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
+			//if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
+			if (!m_ChargingJump && jump)
+				m_ChargingJump = true;
+			else if (!jump && m_ChargingJump && !crouch && m_JumpCount < 2)
 			{
+				float chargedJumpPower = 1 + Mathf.Clamp(m_currentChargeDuration, 0, m_MaxChargeJumpDuration);
 				// jump!
 				if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
-					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
+					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.z);
 				else if (transform.rotation.eulerAngles.z > 80 && transform.rotation.eulerAngles.z < 100)
                 {
 					if (transform.rotation.eulerAngles.y > -10 && transform.rotation.eulerAngles.y < 10)
-						m_Rigidbody.velocity = new Vector3(-m_JumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+						m_Rigidbody.velocity = new Vector3(-m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
 					else if (transform.rotation.eulerAngles.y > 170 && transform.rotation.eulerAngles.y < 190)
-						m_Rigidbody.velocity = new Vector3(m_JumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+						m_Rigidbody.velocity = new Vector3(m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
 					else if (transform.rotation.eulerAngles.y > 80 && transform.rotation.eulerAngles.y < 100)
-						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, m_JumpPower);
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, m_JumpPower * chargedJumpPower);
 					else if (transform.rotation.eulerAngles.y > 260 && transform.rotation.eulerAngles.y < 280)
-						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, -m_JumpPower);
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, -m_JumpPower * chargedJumpPower);
 				}
 				else if (this.transform.rotation.eulerAngles.z > 260 && this.transform.rotation.eulerAngles.z < 280)
 				{
 					if (this.transform.eulerAngles.y > -10 && this.transform.rotation.eulerAngles.y < 10)
-						m_Rigidbody.velocity = new Vector3(m_JumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+						m_Rigidbody.velocity = new Vector3(m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
 					else if (this.transform.eulerAngles.y > 260 && this.transform.rotation.eulerAngles.y < 280)
-						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, m_JumpPower);
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, m_JumpPower * chargedJumpPower);
 					else if (this.transform.eulerAngles.y > 170 && this.transform.rotation.eulerAngles.y < 190)
-						m_Rigidbody.velocity = new Vector3(-m_JumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+						m_Rigidbody.velocity = new Vector3(-m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
 					else if (this.transform.eulerAngles.y > 80 && this.transform.rotation.eulerAngles.y < 100)
-						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, -m_JumpPower);
+						m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_Rigidbody.velocity.y, -m_JumpPower * chargedJumpPower);
 				}
 				else if (this.transform.rotation.eulerAngles.z > 170 && this.transform.rotation.eulerAngles.z < 190)
 				{
-					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -m_JumpPower, m_Rigidbody.velocity.z);
+					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.z);
 				}
 				m_IsGrounded = false;
 				m_Animator.applyRootMotion = false;
 				m_GroundCheckDistance = 0.1f;
+				m_JumpCount++;
+				m_ChargingJump = false;
+				m_currentChargeDuration = 0;
 			}
 		}
 
@@ -269,6 +287,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				m_GroundNormal = hitInfo.normal;
 				m_IsGrounded = true;
 				m_Animator.applyRootMotion = true;
+				m_JumpCount = 0;
 			}
 			else
 			{
