@@ -52,7 +52,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			if (move.magnitude > 1f) move.Normalize();
 			move = transform.InverseTransformDirection(move);
 			CheckGroundStatus();
-			move = Vector3.ProjectOnPlane(move, m_GroundNormal);
+			move = Vector3.ProjectOnPlane(move, Vector3.up);
 			m_TurnAmount = Mathf.Atan2(move.x, move.z);
 			m_ForwardAmount = move.z;
 
@@ -87,7 +87,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			}
 			else
 			{
-				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
+				Ray crouchRay = new Ray(m_Rigidbody.position + transform.TransformDirection(Vector3.up) * m_Capsule.radius * k_Half, transform.TransformDirection(Vector3.up));
 				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
 				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
 				{
@@ -105,10 +105,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// prevent standing up in crouch-only zones
 			if (!m_Crouching)
 			{
-				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
+				Ray crouchRay = new Ray(m_Rigidbody.position + transform.TransformDirection(Vector3.up) * m_Capsule.radius * k_Half, transform.TransformDirection(Vector3.up));
 				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
+				Debug.DrawRay(m_Rigidbody.position + transform.TransformDirection(Vector3.up) * m_Capsule.radius * k_Half, transform.TransformDirection(Vector3.up) * crouchRayLength, Color.yellow, 10);
 				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-				{
+				{					
 					m_Crouching = true;
 				}
 			}
@@ -180,7 +181,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			// help the character turn faster (this is in addition to root rotation in the animation)
 			float turnSpeed = Mathf.Lerp(m_StationaryTurnSpeed, m_MovingTurnSpeed, m_ForwardAmount);
-			transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0);
+			transform.Rotate(0, m_TurnAmount * turnSpeed * Time.deltaTime, 0, Space.Self);
 		}
 
 
@@ -193,7 +194,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				Vector3 v = (m_Animator.deltaPosition * m_MoveSpeedMultiplier) / Time.deltaTime;
 
 				// we preserve the existing y part of the current velocity.
-				v.y = m_Rigidbody.velocity.y;
+				//v.y = m_Rigidbody.velocity.y;
 				m_Rigidbody.velocity = v;
 			}
 		}
@@ -204,11 +205,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			RaycastHit hitInfo;
 #if UNITY_EDITOR
 			// helper to visualise the ground check ray in the scene view
-			Debug.DrawLine(transform.position + (Vector3.up * 0.1f), transform.position + (Vector3.up * 0.1f) + (Vector3.down * m_GroundCheckDistance));
+			Debug.DrawLine(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), 
+				transform.position + (transform.TransformDirection(Vector3.up) * 0.1f) + 
+				(transform.TransformDirection(Vector3.down) * m_GroundCheckDistance), Color.green, 1);
 #endif
 			// 0.1f is a small offset to start the ray from inside the character
 			// it is also good to note that the transform position in the sample assets is at the base of the character
-			if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, m_GroundCheckDistance))
+			if (Physics.Raycast(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), transform.TransformDirection(Vector3.down), out hitInfo, m_GroundCheckDistance))
 			{
 				m_GroundNormal = hitInfo.normal;
 				m_IsGrounded = true;
@@ -217,7 +220,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			else
 			{
 				m_IsGrounded = false;
-				m_GroundNormal = Vector3.up;
+				m_GroundNormal = transform.TransformDirection(Vector3.up);
 				m_Animator.applyRootMotion = false;
 			}
 		}
