@@ -10,7 +10,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		[SerializeField] float m_MovingTurnSpeed = 360;
 		[SerializeField] float m_StationaryTurnSpeed = 180;
 		[SerializeField] float m_JumpPower = 12f;
-		[Range(1f, 4f)][SerializeField] float m_GravityMultiplier = 2f;
+		[Range(1f, 4f)] [SerializeField] float m_GravityMultiplier = 2f;
 		[SerializeField] float m_RunCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
 		[SerializeField] float m_MoveSpeedMultiplier = 1f;
 		[SerializeField] float m_AnimSpeedMultiplier = 1f;
@@ -117,7 +117,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				Ray crouchRay = new Ray(m_Rigidbody.position + transform.TransformDirection(Vector3.up) * m_Capsule.radius * k_Half, transform.TransformDirection(Vector3.up));
 				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
 				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-				{					
+				{
 					m_Crouching = true;
 				}
 			}
@@ -214,7 +214,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
 					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.z);
 				else if (transform.rotation.eulerAngles.z > 80 && transform.rotation.eulerAngles.z < 100)
-                {
+				{
 					if (transform.rotation.eulerAngles.y > -10 && transform.rotation.eulerAngles.y < 10)
 						m_Rigidbody.velocity = new Vector3(-m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
 					else if (transform.rotation.eulerAngles.y > 170 && transform.rotation.eulerAngles.y < 190)
@@ -276,8 +276,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			RaycastHit hitInfo;
 #if UNITY_EDITOR
 			// helper to visualise the ground check ray in the scene view
-			Debug.DrawLine(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), 
-				transform.position + (transform.TransformDirection(Vector3.up) * 0.1f) + 
+			Debug.DrawLine(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f),
+				transform.position + (transform.TransformDirection(Vector3.up) * 0.1f) +
 				(transform.TransformDirection(Vector3.down) * m_GroundCheckDistance), Color.green, 1);
 #endif
 			// 0.1f is a small offset to start the ray from inside the character
