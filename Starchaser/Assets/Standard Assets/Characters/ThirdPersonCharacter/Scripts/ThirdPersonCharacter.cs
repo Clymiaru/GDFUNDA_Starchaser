@@ -200,7 +200,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			HandleGroundedMovement(false, jump);
 		}
 
-
 		void HandleGroundedMovement(bool crouch, bool jump)
 		{
 			// check whether conditions are right to allow a jump:
