@@ -18,7 +18,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 
 		Rigidbody m_Rigidbody;
 		Animator m_Animator;
-		bool m_IsGrounded;
+		public bool m_IsGrounded;
 		float m_OrigGroundCheckDistance;
 		const float k_Half = 0.5f;
 		float m_TurnAmount;
@@ -33,6 +33,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		float m_MaxChargeJumpDuration = 1.0f;
 		bool m_ChargingJump = false;
 		float m_currentChargeDuration = 0;
+		float m_JumpDistance = 2.5f;
 
 		void Start()
 		{
@@ -209,6 +210,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			else if (!jump && m_ChargingJump && !crouch && m_JumpCount < 2)
 			{
 				float chargedJumpPower = 1 + Mathf.Clamp(m_currentChargeDuration, 0, m_MaxChargeJumpDuration);
+				m_Rigidbody.velocity *= m_JumpDistance;
 				// jump!
 				if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
 					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.z);
