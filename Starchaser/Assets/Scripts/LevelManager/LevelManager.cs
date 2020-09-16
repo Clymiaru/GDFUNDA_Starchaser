@@ -28,8 +28,6 @@ using System.IO;
 
 //	Time TimeRequiredForRankS { get; }
 //	int AchievedScore { get; }
-
-
 //}
 
 //Cache level necessary information
@@ -61,7 +59,10 @@ public class LevelManager
 		do
 		{
 			data = Resources.Load<LevelData>($"{levelsPath}/Level" + id);
-			levelCache.Add(new Level(data));
+			if (data != null)
+			{
+				levelCache.Add(new Level(data));
+			}
 			id++;
 		} while (data != null);
 	}

@@ -2,49 +2,50 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System;
 public class LevelSelectionScreen : View
 {
-    [SerializeField] private Text currentLevelLabel;
     [SerializeField] private Image currentLevelImage;
 
     [SerializeField] private Button prevButton;
+    [SerializeField] private Text currentLevelLabel;
     [SerializeField] private Button nextButton;
 
-    [SerializeField] private Text ARankRequirement;
-    [SerializeField] private Text SRankRequirement;
+    [SerializeField] private Text scoreInfo;
+    [SerializeField] private Text timeInfo;
+    [SerializeField] private Image rankImage;
 
+    [SerializeField] private Text rankARequirementInfo;
+    [SerializeField] private Text rankSRequirementInfo;
 
     private int currentLevelID = 0;
     private int minLevels = 0;
     private int maxLevels = 3;
 
-
     private void Start()
     {
         LevelManager.Instance.PreLoadLevelInformation("Levels");
         currentLevelID = PlayerPrefs.GetInt("LevelID", 0);
-        maxLevels = LevelManager.Instance.LevelCount;
+        maxLevels = LevelManager.Instance.LevelCount - 1;
         UpdateCurrentLevel();
     }
 
     public void OnPrevLevelButtonClicked()
     {
         currentLevelID--;
-        currentLevelID = Mathf.Max(currentLevelID, minLevels);
         UpdateCurrentLevel();
     }
 
     public void OnNextLevelButtonClicked()
     {
         currentLevelID++;
-        currentLevelID = Mathf.Min(currentLevelID, maxLevels-1);
         UpdateCurrentLevel();
     }
 
     public void UpdateCurrentLevel()
     {
-        PlayerPrefs.SetInt("LevelID", currentLevelID);
+        currentLevelID = Mathf.Clamp(currentLevelID, minLevels, maxLevels);
+        PlayerPrefs.SetInt("Starchaser-LevelSelection-SelectedLevelID", currentLevelID);
         
         if (currentLevelID <= minLevels)
         {
@@ -55,7 +56,7 @@ public class LevelSelectionScreen : View
             ShowButton(prevButton);
         }
 
-        if (currentLevelID == (maxLevels - 1))
+        if (currentLevelID >= maxLevels)
         {
             HideButton(nextButton);
         }
@@ -65,17 +66,30 @@ public class LevelSelectionScreen : View
         }
 
         var level = LevelManager.Instance.GetLevel(currentLevelID);
-        currentLevelLabel.text = level.Data.Name;
-        currentLevelImage.sprite = level.Data.Image;
-
-        //TODO: Format in time (00:00:00)
-        var aData = level.Data.ARankRequirement;
-        ARankRequirement.text = $"A: {aData.minutes}:00:00";
-
-        //TODO: Format in time (00:00:00)
-        var sData = level.Data.SRankRequirement;
-        SRankRequirement.text = $"S: {sData.minutes}:00:00";
+        ShowLevelData(level);
     }
+
+    private void ShowLevelData(Level level)
+    {
+        var levelData = level.Data;
+
+        currentLevelLabel.text = levelData.Name;
+        currentLevelImage.sprite = levelData.Image;
+
+        scoreInfo.text = $"{levelData.AchievedScore:D12}";
+
+        var achievedTime = levelData.AchievedTime;
+        timeInfo.text = achievedTime.ToString();
+        //rankImage.sprite;
+
+        var aData = levelData.ARankRequirement;
+        rankARequirementInfo.text = aData.ToString();
+
+        var sData = levelData.SRankRequirement;
+        rankSRequirementInfo.text = sData.ToString();
+    }
+
+    
 
     private void HideButton(Button toHide)
     {

@@ -15,10 +15,17 @@ MonoBehaviour:
   levelName: Scorpio Labyrinth
   levelImage: {fileID: 21300000, guid: 7b4c1768a08d948429aa60d3d9d4ca78, type: 3}
   timeRequiredForRankA:
-    milliseconds: 0
-    seconds: 0
+    milliseconds: 139
+    seconds: 66
     minutes: 5
   timeRequiredForRankS:
+    milliseconds: 1
+    seconds: 11
+    minutes: 4
+  isUnlocked: 0
+  achievedRank: 0
+  achievedTime:
     milliseconds: 0
     seconds: 0
-    minutes: 4
+    minutes: 0
+  achievedScore: 0
