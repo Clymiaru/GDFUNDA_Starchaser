@@ -24,6 +24,25 @@ public class LevelSelectionScreen : View
     private int minLevels = 0;
     private int maxLevels = 3;
 
+    public void OnReturnToMainMenuButtonClick()
+    {
+        Debug.Log("<color=red>LevelSelectionScreen</color> Return to Main Menu was Clicked!");
+        this.Hide();
+        ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
+    }
+
+    public void OnExploreButtonClick()
+    {
+        Debug.Log("<color=red>LevelSelectionScreen</color> Explore was Clicked!");
+        Debug.Log("Go to Level: " + LevelManager.Instance.GetLevel(currentLevelID).Data.Name);
+
+        this.Hide();
+
+        LoadManager.Instance.LoadScene("TestLevel");
+        // TODO: Transfer to respective level
+
+    }
+
     private void Start()
     {
         LevelManager.Instance.PreLoadLevelInformation("Levels");
@@ -101,14 +120,5 @@ public class LevelSelectionScreen : View
         toHide.interactable = true;
     }
 
-    public void OnReturnToMainMenuButtonClick()
-    {
-        ViewHandler.Instance.OnViewHidden(this);
-        ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
-    }
-
-    public void OnExploreButtonClick()
-    {
-        Debug.Log("Explore Button was Clicked!");
-    }
+    
 }
