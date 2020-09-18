@@ -33,7 +33,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		float m_MaxChargeJumpDuration = 1.0f;
 		bool m_ChargingJump = false;
 		float m_currentChargeDuration = 0;
-		float m_JumpDistance = 2.5f;
+		float m_JumpDistance = 20f;
 
 		void Start()
 		{
@@ -205,12 +205,15 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		{
 			// check whether conditions are right to allow a jump:
 			//if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
-			if (!m_ChargingJump && jump)
+			if (!m_ChargingJump && jump && m_JumpCount < 2)
 				m_ChargingJump = true;
-			else if (!jump && m_ChargingJump && !crouch && m_JumpCount < 2)
+			else if (!jump && m_ChargingJump && !crouch)
 			{
 				float chargedJumpPower = 1 + Mathf.Clamp(m_currentChargeDuration, 0, m_MaxChargeJumpDuration);
-				m_Rigidbody.velocity *= m_JumpDistance;
+				//m_Rigidbody.velocity *= m_JumpDistance;
+				Vector3 horizontalVel = Vector3.ProjectOnPlane(m_Rigidbody.velocity, transform.TransformDirection(Vector3.up));
+				float velMagnitude = horizontalVel.magnitude;
+				m_Rigidbody.velocity *= 0;
 				// jump!
 				if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
 					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.z);
@@ -240,6 +243,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.z);
 				}
+				m_Rigidbody.AddForce(transform.TransformDirection(Vector3.forward) * m_JumpDistance * velMagnitude);
 				m_IsGrounded = false;
 				m_Animator.applyRootMotion = false;
 				m_GroundCheckDistance = 0.1f;
@@ -283,18 +287,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 #endif
 			// 0.1f is a small offset to start the ray from inside the character
 			// it is also good to note that the transform position in the sample assets is at the base of the character
-			if (Physics.Raycast(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), transform.TransformDirection(Vector3.down), out hitInfo, m_GroundCheckDistance))
+			if (m_ChargingJump)
 			{
-				m_GroundNormal = hitInfo.normal;
+				m_GroundNormal = transform.TransformDirection(Vector3.up);
 				m_IsGrounded = true;
-				m_Animator.applyRootMotion = true;
-				m_JumpCount = 0;
 			}
 			else
 			{
-				m_IsGrounded = false;
-				m_GroundNormal = transform.TransformDirection(Vector3.up);
-				m_Animator.applyRootMotion = false;
+				if (Physics.Raycast(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), transform.TransformDirection(Vector3.down), out hitInfo, m_GroundCheckDistance))
+				{
+					m_GroundNormal = hitInfo.normal;
+					m_IsGrounded = true;
+					m_Animator.applyRootMotion = true;
+					m_JumpCount = 0;
+				}
+				else
+				{
+					m_IsGrounded = false;
+					m_GroundNormal = transform.TransformDirection(Vector3.up);
+					m_Animator.applyRootMotion = false;
+				}
 			}
 		}
 	}
