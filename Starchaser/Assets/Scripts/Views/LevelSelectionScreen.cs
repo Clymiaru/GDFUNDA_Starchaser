@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
+
 public class LevelSelectionScreen : View
 {
     [SerializeField] private Image currentLevelImage;
 
     [SerializeField] private Button prevButton;
-    [SerializeField] private Text currentLevelLabel;
+    [SerializeField] private TMP_Text currentLevelLabel;
     [SerializeField] private Button nextButton;
 
-    [SerializeField] private Text scoreInfo;
-    [SerializeField] private Text timeInfo;
+    [SerializeField] private TMP_Text scoreInfo;
+    [SerializeField] private TMP_Text timeInfo;
     [SerializeField] private Image rankImage;
 
-    [SerializeField] private Text rankARequirementInfo;
-    [SerializeField] private Text rankSRequirementInfo;
+    [SerializeField] private TMP_Text rankARequirementInfo;
+    [SerializeField] private TMP_Text rankSRequirementInfo;
 
     private int currentLevelID = 0;
     private int minLevels = 0;
@@ -66,10 +68,10 @@ public class LevelSelectionScreen : View
         }
 
         var level = LevelManager.Instance.GetLevel(currentLevelID);
-        ShowLevelData(level);
+        UpdateLevelInfo(level);
     }
 
-    private void ShowLevelData(Level level)
+    private void UpdateLevelInfo(Level level)
     {
         var levelData = level.Data;
 
@@ -80,7 +82,7 @@ public class LevelSelectionScreen : View
 
         var achievedTime = levelData.AchievedTime;
         timeInfo.text = achievedTime.ToString();
-        //rankImage.sprite;
+        // rankImage.sprite;
 
         var aData = levelData.ARankRequirement;
         rankARequirementInfo.text = aData.ToString();
@@ -88,8 +90,6 @@ public class LevelSelectionScreen : View
         var sData = levelData.SRankRequirement;
         rankSRequirementInfo.text = sData.ToString();
     }
-
-    
 
     private void HideButton(Button toHide)
     {
@@ -99,5 +99,16 @@ public class LevelSelectionScreen : View
     private void ShowButton(Button toHide)
     {
         toHide.interactable = true;
+    }
+
+    public void OnReturnToMainMenuButtonClick()
+    {
+        ViewHandler.Instance.OnViewHidden(this);
+        ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
+    }
+
+    public void OnExploreButtonClick()
+    {
+        Debug.Log("Explore Button was Clicked!");
     }
 }
