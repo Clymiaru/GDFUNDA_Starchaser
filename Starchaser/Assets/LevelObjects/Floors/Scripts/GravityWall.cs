@@ -49,6 +49,11 @@ public class GravityWall : MonoBehaviour
                         collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(0, collision.collider.GetComponent<Transform>().rotation.eulerAngles.x,
                             0);
                     }
+                    else
+                    {
+                        collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(0, collision.collider.GetComponent<Transform>().rotation.eulerAngles.x,
+                            0);
+                    }
                     //collision.collider.GetComponent<Transform>().rotation = Quaternion.Euler(this.transform.rotation.eulerAngles.x,
                     //    collision.collider.GetComponent<Transform>().rotation.eulerAngles.y, this.transform.rotation.eulerAngles.z);
                 }
