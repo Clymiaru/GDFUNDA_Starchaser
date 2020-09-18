@@ -20,4 +20,9 @@ public class ViewNames {
 		public const string TWO_CHOICE_DIALOG_NAME = "TwoChoiceDialog";
 		public const string NOTIFICATION_DIALOG_NAME = "NotificationDialog";
 	}
+
+    public class StarchaserScreenNames
+    {
+		public const string MAIN_MENU_SCREEN = "MainMenuScreen"; 	
+	}
 }
