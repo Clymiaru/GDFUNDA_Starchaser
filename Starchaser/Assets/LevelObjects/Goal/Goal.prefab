@@ -4777,6 +4777,7 @@ GameObject:
   - component: {fileID: 490453663}
   - component: {fileID: 490453662}
   - component: {fileID: 743277435}
+  - component: {fileID: 1313545040}
   m_Layer: 0
   m_Name: Goal
   m_TagString: Untagged
@@ -10108,7 +10109,7 @@ PlayableDirector:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7197480657874548308}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: d7903dc8bf01b3c4da7fefab60de2222, type: 2}
   m_InitialState: 1
@@ -10118,5 +10119,23 @@ PlayableDirector:
   m_SceneBindings:
   - key: {fileID: -6951751725054407064, guid: d7903dc8bf01b3c4da7fefab60de2222, type: 2}
     value: {fileID: 0}
+  - key: {fileID: -8455103943232930765, guid: d7903dc8bf01b3c4da7fefab60de2222, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 4265930386469080221, guid: d7903dc8bf01b3c4da7fefab60de2222, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 4533408093502433284, guid: d7903dc8bf01b3c4da7fefab60de2222, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &1313545040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7197480657874548308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd4b6e08d71c114b9d275abd5ba4004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
