@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public static class GameManager
 {
-    // Start is called before the first frame update
-    void Start()
+    public static bool isLevelFinished { get; private set; } = false;
+
+    public static void LevelIsFinished()
     {
+        isLevelFinished = true;
         
+        // Save current time data and level id
     }
 
-    // Update is called once per frame
-    void Update()
+    public static void SetLevelData()
     {
-        
+
     }
 }

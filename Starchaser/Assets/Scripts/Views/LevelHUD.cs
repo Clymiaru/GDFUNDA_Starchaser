@@ -13,9 +13,12 @@ public class LevelHUD : View
     private int seconds = 0;
     private void Update()
     {
-        timer += Time.deltaTime;
-        minutes = (int)timer / 60;
-        seconds = (int)timer - 60 * minutes;
+        if (!GameManager.isLevelFinished)
+        {
+            timer += Time.deltaTime;
+            minutes = (int)timer / 60;
+            seconds = (int)timer - 60 * minutes;
+        }
 
         timerInfo.text = $"{minutes:D2}:{seconds:D2}";
     }
