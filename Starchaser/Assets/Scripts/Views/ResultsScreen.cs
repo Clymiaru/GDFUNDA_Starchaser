@@ -16,8 +16,7 @@ public class ResultsScreen : View
 
         levelName.text = GameManager.Instance.CurrentLevelData.Name;
 
-        statusInfo.text = GameManager.Instance.Status == PlayerStatus.Won ?
-            "Stage All Clear!!" : "You Died :)";
+        statusInfo.text = (GameManager.Instance.Status == PlayerStatus.Won) ? "Stage All Clear!!" : "You Died :)";
 
     }
     public void OnEndButtonClick()

@@ -33,10 +33,13 @@ public class Player : PlayerTeamEntity
     {
         if (this.HP <= 0 && GameManager.Instance.CurrentState == GameState.PlayLevel)
         {
+            GameManager.Instance.PlayerLost();
+            Debug.Log(GameManager.Instance.Status.ToString());
+
             var currentView = ViewHandler.Instance.GetActiveView();
             currentView.Hide();
             ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.RESULTS, true);
-            GameManager.Instance.PlayerLost();
+            
             GameManager.Instance.CurrentState = GameState.ViewResults;
         }
     }

@@ -72,13 +72,6 @@ public class GameManager
     public void SaveAchievedTime(TimeData timeData)
     {
         currentAchievedTime = timeData;
-
-        //PlayerPrefs.SetFloat()
-
-
-
-
-
     }
 
     public TimeData AchievedTime
@@ -113,6 +106,7 @@ public class GameManager
     public void PlayerLost()
     {
         playerStatus = PlayerStatus.Lost;
+        Debug.Log("Status changed");
     }
 
     public string Rank
