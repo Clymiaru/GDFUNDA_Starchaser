@@ -13,9 +13,8 @@ public class LevelSelectionScreen : View
     [SerializeField] private TMP_Text currentLevelLabel;
     [SerializeField] private Button nextButton;
 
-    [SerializeField] private TMP_Text scoreInfo;
     [SerializeField] private TMP_Text timeInfo;
-    [SerializeField] private Image rankImage;
+    [SerializeField] private TMP_Text rankInfo;
 
     [SerializeField] private TMP_Text rankARequirementInfo;
     [SerializeField] private TMP_Text rankSRequirementInfo;
@@ -38,10 +37,8 @@ public class LevelSelectionScreen : View
 
         this.Hide();
 
+        // TODO: Determine if loading screen is needed
         LoadManager.Instance.LoadScene(LevelManager.Instance.GetLevel(currentLevelID).Data.LevelScene);
-
-        // TODO: Transfer to respective level
-
     }
 
     private void Start()
@@ -98,17 +95,53 @@ public class LevelSelectionScreen : View
         currentLevelLabel.text = levelData.Name;
         currentLevelImage.sprite = levelData.Image;
 
-        scoreInfo.text = $"{levelData.AchievedScore:D12}";
-
         var achievedTime = levelData.AchievedTime;
         timeInfo.text = achievedTime.ToString();
-        // rankImage.sprite;
+        UpdateAchievedRankInfo(levelData.AchievedRank);
 
         var aData = levelData.ARankRequirement;
         rankARequirementInfo.text = aData.ToString();
 
         var sData = levelData.SRankRequirement;
         rankSRequirementInfo.text = sData.ToString();
+    }
+
+    private void UpdateAchievedRankInfo(Rank rank)
+    {
+        switch(rank)
+        {
+            case Rank.RankS:
+            {
+                rankInfo.text = "S";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+            case Rank.RankA:
+            {
+                rankInfo.text = "A";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+            case Rank.RankB:
+            {
+                rankInfo.text = "B";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+            case Rank.RankC:
+            {
+                rankInfo.text = "C";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+            case Rank.RankD:
+            {
+                rankInfo.text = "D";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+        }
+        
     }
 
     private void HideButton(Button toHide)

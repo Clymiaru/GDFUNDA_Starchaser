@@ -7,7 +7,8 @@ public class ResultsScreen : View
     public void OnEndButtonClick()
     {
         Debug.Log("<color=red>ResultsHUD</color> End was Clicked!");
-        ViewHandler.Instance.OnViewHidden(this);
+        this.Hide();
+        LoadManager.Instance.LoadScene("Pre-Level");
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
     }
 

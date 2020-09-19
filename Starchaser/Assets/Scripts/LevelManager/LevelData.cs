@@ -14,6 +14,13 @@ public struct TimeData
     {
         return $"{minutes:D2}:{seconds:D2}\"{milliseconds:D3}";
     }
+
+    public TimeData(float time)
+    {
+        minutes = (int)time / 60;
+        seconds = (int)time - 60 * minutes;
+        milliseconds = (int)(1000 * (time - minutes * 60 - seconds));
+    }
 }
 
 [CreateAssetMenu(fileName = "New Level", menuName = "Starchaser/Level")]
@@ -32,7 +39,6 @@ public class LevelData : ScriptableObject
     [SerializeField] private bool isUnlocked;
     [SerializeField] private Rank achievedRank;
     [SerializeField] private TimeData achievedTime;
-    [SerializeField] private int achievedScore;
 
     public string Name
     {
@@ -91,7 +97,7 @@ public class LevelData : ScriptableObject
     {
         get
         {
-            return AchievedRank;
+            return achievedRank;
         }
     }
 
@@ -102,13 +108,4 @@ public class LevelData : ScriptableObject
             return achievedTime;
         }
     }
-
-    public int AchievedScore
-    {
-        get
-        {
-            return achievedScore;
-        }
-    }
-
 }

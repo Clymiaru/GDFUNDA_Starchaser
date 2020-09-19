@@ -23,10 +23,9 @@ MonoBehaviour:
     seconds: 30
     minutes: 3
   levelSceneName: Level1
-  isUnlocked: 0
-  achievedRank: 0
+  isUnlocked: 1
+  achievedRank: 5
   achievedTime:
     milliseconds: 0
     seconds: 0
     minutes: 0
-  achievedScore: 0
