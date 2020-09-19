@@ -16,7 +16,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		[SerializeField] float m_AnimSpeedMultiplier = 1f;
 		[SerializeField] float m_GroundCheckDistance = 0.1f;
 
-		Rigidbody m_Rigidbody;
+		public Rigidbody m_Rigidbody;
 		Animator m_Animator;
 		public bool m_IsGrounded;
 		float m_OrigGroundCheckDistance;
@@ -296,10 +296,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				if (Physics.Raycast(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), transform.TransformDirection(Vector3.down), out hitInfo, m_GroundCheckDistance))
 				{
-					m_GroundNormal = hitInfo.normal;
-					m_IsGrounded = true;
-					m_Animator.applyRootMotion = true;
-					m_JumpCount = 0;
+					if (!hitInfo.collider.isTrigger)
+					{
+						m_GroundNormal = hitInfo.normal;
+						m_IsGrounded = true;
+						m_Animator.applyRootMotion = true;
+						m_JumpCount = 0;
+					}
 				}
 				else
 				{

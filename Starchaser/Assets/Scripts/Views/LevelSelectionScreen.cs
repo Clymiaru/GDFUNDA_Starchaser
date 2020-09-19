@@ -13,11 +13,11 @@ public class LevelSelectionScreen : View
     [SerializeField] private TMP_Text currentLevelLabel;
     [SerializeField] private Button nextButton;
 
-    [SerializeField] private TMP_Text timeInfo;
-    [SerializeField] private TMP_Text rankInfo;
+    //[SerializeField] private TMP_Text timeInfo;
+    //[SerializeField] private TMP_Text rankInfo;
 
-    [SerializeField] private TMP_Text rankARequirementInfo;
-    [SerializeField] private TMP_Text rankSRequirementInfo;
+    //[SerializeField] private TMP_Text rankARequirementInfo;
+    //[SerializeField] private TMP_Text rankSRequirementInfo;
 
     private int currentLevelID = 0;
     private int minLevels = 0;
@@ -28,6 +28,8 @@ public class LevelSelectionScreen : View
         Debug.Log("<color=red>LevelSelectionScreen</color> Return to Main Menu was Clicked!");
         this.Hide();
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
+        PlayerPrefs.SetInt("LevelID", currentLevelID);
+        GameManager.Instance.CurrentState = GameState.MainMenu;
     }
 
     public void OnExploreButtonClick()
@@ -35,15 +37,19 @@ public class LevelSelectionScreen : View
         Debug.Log("<color=red>LevelSelectionScreen</color> Explore was Clicked!");
         Debug.Log("Go to Level: " + LevelManager.Instance.GetLevel(currentLevelID).Data.Name);
 
-        this.Hide();
+        PlayerPrefs.SetInt("LevelID", currentLevelID);
 
-        // TODO: Determine if loading screen is needed
+        this.Hide();
+        GameManager.Instance.UpdateCurrentLevelData(currentLevelID);
+
+        GameManager.Instance.CurrentState = GameState.PlayLevel;
+
         LoadManager.Instance.LoadScene(LevelManager.Instance.GetLevel(currentLevelID).Data.LevelScene);
     }
 
     private void Start()
     {
-        LevelManager.Instance.PreLoadLevelInformation("Levels");
+        
         currentLevelID = PlayerPrefs.GetInt("LevelID", 0);
         maxLevels = LevelManager.Instance.LevelCount - 1;
         UpdateCurrentLevel();
@@ -95,54 +101,54 @@ public class LevelSelectionScreen : View
         currentLevelLabel.text = levelData.Name;
         currentLevelImage.sprite = levelData.Image;
 
-        var achievedTime = levelData.AchievedTime;
-        timeInfo.text = achievedTime.ToString();
-        UpdateAchievedRankInfo(levelData.AchievedRank);
+        //var achievedTime = levelData.AchievedTime;
+        //timeInfo.text = achievedTime.ToString();
+        //UpdateAchievedRankInfo(levelData.AchievedRank);
 
-        var aData = levelData.ARankRequirement;
-        rankARequirementInfo.text = aData.ToString();
+        //var aData = levelData.ARankRequirement;
+        //rankARequirementInfo.text = aData.ToString();
 
-        var sData = levelData.SRankRequirement;
-        rankSRequirementInfo.text = sData.ToString();
+        //var sData = levelData.SRankRequirement;
+        //rankSRequirementInfo.text = sData.ToString();
     }
 
-    private void UpdateAchievedRankInfo(Rank rank)
-    {
-        switch(rank)
-        {
-            case Rank.RankS:
-            {
-                rankInfo.text = "S";
-                rankInfo.color = new Color32(255, 255, 255, 255);
-                break;
-            }
-            case Rank.RankA:
-            {
-                rankInfo.text = "A";
-                rankInfo.color = new Color32(255, 255, 255, 255);
-                break;
-            }
-            case Rank.RankB:
-            {
-                rankInfo.text = "B";
-                rankInfo.color = new Color32(255, 255, 255, 255);
-                break;
-            }
-            case Rank.RankC:
-            {
-                rankInfo.text = "C";
-                rankInfo.color = new Color32(255, 255, 255, 255);
-                break;
-            }
-            case Rank.RankD:
-            {
-                rankInfo.text = "D";
-                rankInfo.color = new Color32(255, 255, 255, 255);
-                break;
-            }
-        }
+    //private void UpdateAchievedRankInfo(Rank rank)
+    //{
+    //    switch(rank)
+    //    {
+    //        case Rank.RankS:
+    //        {
+    //            rankInfo.text = "S";
+    //            rankInfo.color = new Color32(255, 255, 255, 255);
+    //            break;
+    //        }
+    //        case Rank.RankA:
+    //        {
+    //            rankInfo.text = "A";
+    //            rankInfo.color = new Color32(255, 255, 255, 255);
+    //            break;
+    //        }
+    //        case Rank.RankB:
+    //        {
+    //            rankInfo.text = "B";
+    //            rankInfo.color = new Color32(255, 255, 255, 255);
+    //            break;
+    //        }
+    //        case Rank.RankC:
+    //        {
+    //            rankInfo.text = "C";
+    //            rankInfo.color = new Color32(255, 255, 255, 255);
+    //            break;
+    //        }
+    //        case Rank.RankD:
+    //        {
+    //            rankInfo.text = "D";
+    //            rankInfo.color = new Color32(255, 255, 255, 255);
+    //            break;
+    //        }
+    //    }
         
-    }
+    //}
 
     private void HideButton(Button toHide)
     {
