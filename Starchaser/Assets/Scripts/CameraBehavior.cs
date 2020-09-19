@@ -22,5 +22,9 @@ public class CameraBehavior : MonoBehaviour
         float currentRotation = this.GetComponentInParent<Transform>().rotation.eulerAngles.y;
 
         this.transform.rotation = Quaternion.Euler(new Vector3(0, currentRotation + rotationIncrease, 0));
+
+        float cameraZoom = Input.GetAxis("Mouse ScrollWheel");
+        Camera.main.GetComponent<Transform>().localPosition = Camera.main.GetComponent<Transform>().localPosition * (1 - cameraZoom);
+
     }
 }
