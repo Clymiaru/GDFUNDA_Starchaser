@@ -9,30 +9,38 @@ public class FollowBezierPath : MonoBehaviour
     [SerializeField] List<GameObject> points;
     private float timeFactor = 0.0f;
 
-    private void Update()
+    private void FixedUpdate()
     {
-        if (timeFactor < 1)
+        if (timeFactor < 1.0f)
         {
-            timeFactor += Time.deltaTime * speed;
+            timeFactor += Time.fixedDeltaTime * speed;
             gameObject.transform.position = GetPositionOnTimeFactor(timeFactor);
         }
     }
+    
+    //IEnumerator Delay(float seconds)
+    //{
+    //    yield return new WaitForSeconds(seconds);
+    //}
 
     private void OnDrawGizmos()
     {
-        Vector3 prevPosition = points[0].transform.position;
-        Vector3 position;
-
-        int numberOfPoints = 20;
-        float t;
-        for (int i = 0; i < numberOfPoints; i++)
+        if (!Application.isPlaying)
         {
-            t = i / (numberOfPoints - 1.0f);
-            position = GetPositionOnTimeFactor(t);
+            Vector3 prevPosition = points[0].transform.position;
+            Vector3 position;
 
-            Gizmos.color = new Color(0.8f, 0.5f, 0.0f);
-            Gizmos.DrawLine(prevPosition, position);
-            prevPosition = position;
+            int numberOfPoints = 32;
+            float t;
+            for (int i = 0; i < numberOfPoints; i++)
+            {
+                t = i / (numberOfPoints - 1.0f);
+                position = GetPositionOnTimeFactor(t);
+
+                Gizmos.color = new Color(0.8f, 0.5f, 0.0f);
+                Gizmos.DrawLine(prevPosition, position);
+                prevPosition = position;
+            }
         }
     }
 
@@ -45,17 +53,10 @@ public class FollowBezierPath : MonoBehaviour
         {
             var scale = BinomialCalc(points.Count - 1, i, oneMinusT, t);
             currentPosition += scale * points[i].transform.position;
-            //Debug.Log($"Position: {currentPosition.x}, { currentPosition.y}, {currentPosition.z}");
         }
 
         return currentPosition;
-        //return Mathf.Pow(oneMinusT, 3) * p0 +
-        //    3.0f * Mathf.Pow(oneMinusT, 2) * t * p1 +
-        //    3.0f * oneMinusT * t * t * p2 +
-        //    t * t * t * p3;
     }
-
-    //Binomial Theorem Calculation
 
     private int Factorial(int n)
     {
@@ -75,17 +76,10 @@ public class FollowBezierPath : MonoBehaviour
         }
         return result;
     }
-
     private float BinomialCalc(int maxPow, int currentPow, float term1, float term2)
     {
         float coeff;
         coeff = Factorial(maxPow) / (Factorial(currentPow) * Factorial(maxPow - currentPow));
-            Debug.Log(coeff);
         return coeff * Mathf.Pow(term1, maxPow - currentPow) * Mathf.Pow(term2, currentPow); ;
     }
-
-    //private float CalculateTerm(float term1, float term2, int currentPow, int maxPower)
-    //{
-    //    return Mathf.Pow(term1, maxPower) * Mathf.Pow(term2, maxPower - currentPow);
-    //}
 }
