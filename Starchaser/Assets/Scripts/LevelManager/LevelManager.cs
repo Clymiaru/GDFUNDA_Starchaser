@@ -54,7 +54,7 @@ public class LevelManager
 	public void PreLoadLevelInformation(string levelsPath)
     {
 		// Load all levels
-		int id = 0;
+		int id = 1;
 		LevelData data;
 		do
 		{

@@ -46,6 +46,15 @@ public class LevelData : ScriptableObject
         }
     }
 
+    public string LevelScene
+    { 
+        get
+        {
+            return levelSceneName;
+        }
+    }
+
+
     public Sprite Image
     {
         get

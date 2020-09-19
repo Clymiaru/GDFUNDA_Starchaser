@@ -38,7 +38,8 @@ public class LevelSelectionScreen : View
 
         this.Hide();
 
-        LoadManager.Instance.LoadScene("TestLevel");
+        LoadManager.Instance.LoadScene(LevelManager.Instance.GetLevel(currentLevelID).Data.LevelScene);
+
         // TODO: Transfer to respective level
 
     }
