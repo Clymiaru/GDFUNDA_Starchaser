@@ -3,24 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
+
 public class LevelSelectionScreen : View
 {
     [SerializeField] private Image currentLevelImage;
 
     [SerializeField] private Button prevButton;
-    [SerializeField] private Text currentLevelLabel;
+    [SerializeField] private TMP_Text currentLevelLabel;
     [SerializeField] private Button nextButton;
 
-    [SerializeField] private Text scoreInfo;
-    [SerializeField] private Text timeInfo;
-    [SerializeField] private Image rankImage;
+    [SerializeField] private TMP_Text timeInfo;
+    [SerializeField] private TMP_Text rankInfo;
 
-    [SerializeField] private Text rankARequirementInfo;
-    [SerializeField] private Text rankSRequirementInfo;
+    [SerializeField] private TMP_Text rankARequirementInfo;
+    [SerializeField] private TMP_Text rankSRequirementInfo;
 
     private int currentLevelID = 0;
     private int minLevels = 0;
     private int maxLevels = 3;
+
+    public void OnReturnToMainMenuButtonClick()
+    {
+        Debug.Log("<color=red>LevelSelectionScreen</color> Return to Main Menu was Clicked!");
+        this.Hide();
+        ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
+    }
+
+    public void OnExploreButtonClick()
+    {
+        Debug.Log("<color=red>LevelSelectionScreen</color> Explore was Clicked!");
+        Debug.Log("Go to Level: " + LevelManager.Instance.GetLevel(currentLevelID).Data.Name);
+
+        this.Hide();
+
+        // TODO: Determine if loading screen is needed
+        LoadManager.Instance.LoadScene(LevelManager.Instance.GetLevel(currentLevelID).Data.LevelScene);
+    }
 
     private void Start()
     {
@@ -66,21 +85,19 @@ public class LevelSelectionScreen : View
         }
 
         var level = LevelManager.Instance.GetLevel(currentLevelID);
-        ShowLevelData(level);
+        UpdateLevelInfo(level);
     }
 
-    private void ShowLevelData(Level level)
+    private void UpdateLevelInfo(Level level)
     {
         var levelData = level.Data;
 
         currentLevelLabel.text = levelData.Name;
         currentLevelImage.sprite = levelData.Image;
 
-        scoreInfo.text = $"{levelData.AchievedScore:D12}";
-
         var achievedTime = levelData.AchievedTime;
         timeInfo.text = achievedTime.ToString();
-        //rankImage.sprite;
+        UpdateAchievedRankInfo(levelData.AchievedRank);
 
         var aData = levelData.ARankRequirement;
         rankARequirementInfo.text = aData.ToString();
@@ -89,7 +106,43 @@ public class LevelSelectionScreen : View
         rankSRequirementInfo.text = sData.ToString();
     }
 
-    
+    private void UpdateAchievedRankInfo(Rank rank)
+    {
+        switch(rank)
+        {
+            case Rank.RankS:
+            {
+                rankInfo.text = "S";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+            case Rank.RankA:
+            {
+                rankInfo.text = "A";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+            case Rank.RankB:
+            {
+                rankInfo.text = "B";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+            case Rank.RankC:
+            {
+                rankInfo.text = "C";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+            case Rank.RankD:
+            {
+                rankInfo.text = "D";
+                rankInfo.color = new Color32(255, 255, 255, 255);
+                break;
+            }
+        }
+        
+    }
 
     private void HideButton(Button toHide)
     {
@@ -100,4 +153,6 @@ public class LevelSelectionScreen : View
     {
         toHide.interactable = true;
     }
+
+    
 }

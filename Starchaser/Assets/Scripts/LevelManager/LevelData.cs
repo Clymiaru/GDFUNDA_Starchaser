@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 [Serializable]
 public struct TimeData
 {
@@ -13,6 +13,13 @@ public struct TimeData
     public override string ToString()
     {
         return $"{minutes:D2}:{seconds:D2}\"{milliseconds:D3}";
+    }
+
+    public TimeData(float time)
+    {
+        minutes = (int)time / 60;
+        seconds = (int)time - 60 * minutes;
+        milliseconds = (int)(1000 * (time - minutes * 60 - seconds));
     }
 }
 
@@ -25,13 +32,13 @@ public class LevelData : ScriptableObject
     [SerializeField] private Sprite levelImage;
     [SerializeField] private TimeData timeRequiredForRankA;
     [SerializeField] private TimeData timeRequiredForRankS;
+    [SerializeField] private string levelSceneName;
 
     // Level Data to Track for Saving
     [Header("")]
     [SerializeField] private bool isUnlocked;
     [SerializeField] private Rank achievedRank;
     [SerializeField] private TimeData achievedTime;
-    [SerializeField] private int achievedScore;
 
     public string Name
     {
@@ -44,6 +51,15 @@ public class LevelData : ScriptableObject
             levelName = value;
         }
     }
+
+    public string LevelScene
+    { 
+        get
+        {
+            return levelSceneName;
+        }
+    }
+
 
     public Sprite Image
     {
@@ -81,7 +97,7 @@ public class LevelData : ScriptableObject
     {
         get
         {
-            return AchievedRank;
+            return achievedRank;
         }
     }
 
@@ -92,13 +108,4 @@ public class LevelData : ScriptableObject
             return achievedTime;
         }
     }
-
-    public int AchievedScore
-    {
-        get
-        {
-            return achievedScore;
-        }
-    }
-
 }

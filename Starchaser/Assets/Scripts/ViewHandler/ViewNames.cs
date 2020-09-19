@@ -23,6 +23,10 @@ public class ViewNames {
 
     public class StarchaserScreenNames
     {
-		public const string MAIN_MENU_SCREEN = "MainMenuScreen"; 	
+		public const string MAIN_MENU = "MainMenuScreen";
+		public const string LEVEL_SELECTION = "LevelSelectionScreen";
+		public const string LEVEL = "LevelHUD";
+		public const string PAUSE = "PauseHUD";
+		public const string RESULTS = "ResultsScreen";
 	}
 }
