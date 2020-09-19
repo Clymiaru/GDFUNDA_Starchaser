@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 [Serializable]
 public struct TimeData
 {
@@ -25,6 +25,7 @@ public class LevelData : ScriptableObject
     [SerializeField] private Sprite levelImage;
     [SerializeField] private TimeData timeRequiredForRankA;
     [SerializeField] private TimeData timeRequiredForRankS;
+    [SerializeField] private string levelSceneName;
 
     // Level Data to Track for Saving
     [Header("")]
