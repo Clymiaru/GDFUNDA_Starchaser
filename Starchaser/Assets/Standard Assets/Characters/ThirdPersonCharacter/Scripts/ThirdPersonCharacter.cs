@@ -209,10 +209,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				m_ChargingJump = true;
 			else if (!jump && m_ChargingJump && !crouch)
 			{
-				float chargedJumpPower = 1 + Mathf.Clamp(m_currentChargeDuration, 0, m_MaxChargeJumpDuration);
+				float chargedJumpPower = 1 + Mathf.Min(m_currentChargeDuration, m_MaxChargeJumpDuration) * 0.5f;
 				//m_Rigidbody.velocity *= m_JumpDistance;
 				Vector3 horizontalVel = Vector3.ProjectOnPlane(m_Rigidbody.velocity, transform.TransformDirection(Vector3.up));
-				float velMagnitude = horizontalVel.magnitude;
+				float velMagnitude = horizontalVel.magnitude * (0.25f + Mathf.Min(m_currentChargeDuration, m_MaxChargeJumpDuration) * 6);
 				m_Rigidbody.velocity *= 0;
 				// jump!
 				if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
