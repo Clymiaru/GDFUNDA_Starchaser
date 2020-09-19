@@ -27,10 +27,10 @@ public class Movement : MonoBehaviour
             float horizontalMovement = Input.GetAxis("Horizontal");
             float verticalMovement = Input.GetAxis("Vertical");
 
-            this.gameObject.transform.Translate(Vector3.forward *
+            this.gameObject.transform.Translate(rotationReference.transform.TransformDirection(Vector3.forward) *
                 verticalMovement *
                 Time.deltaTime * this.speed, Space.World);
-            this.gameObject.transform.Translate(Vector3.right *
+            this.gameObject.transform.Translate(rotationReference.transform.TransformDirection(Vector3.right) *
                 horizontalMovement *
                 Time.deltaTime * this.speed, Space.World);
         }
