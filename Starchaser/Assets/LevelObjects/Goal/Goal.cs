@@ -8,6 +8,7 @@ public class Goal : MonoBehaviour
     {
         if (GameManager.Instance.CurrentState == GameState.PlayLevel)
         {
+            Physics.gravity = Vector3.down * 9.81f;
             var currentView = ViewHandler.Instance.GetActiveView();
             currentView.Hide();
             ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.RESULTS, true);
