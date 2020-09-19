@@ -25,6 +25,5 @@ public class CameraBehavior : MonoBehaviour
 
         float cameraZoom = Input.GetAxis("Mouse ScrollWheel");
         Camera.main.GetComponent<Transform>().localPosition = Camera.main.GetComponent<Transform>().localPosition * (1 - cameraZoom);
-
     }
 }

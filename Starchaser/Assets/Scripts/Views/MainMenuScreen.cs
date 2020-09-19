@@ -9,6 +9,7 @@ public class MainMenuScreen : View
         Debug.Log("<color=red>MainMenuScreen</color> Start Game was Clicked!");
         this.Hide();
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
+        GameManager.Instance.CurrentState = GameState.ChooseLevel;
     }
 
     public void OnEndButtonClick()
@@ -16,4 +17,5 @@ public class MainMenuScreen : View
         Debug.Log("<color=red>MainMenuScreen</color> End was Clicked!");
         Application.Quit();
     }
+    
 }

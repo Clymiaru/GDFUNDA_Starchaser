@@ -31,6 +31,14 @@ public class Player : PlayerTeamEntity
     // Update is called once per frame
     void Update()
     {
-        
+        if (this.HP <= 0 && GameManager.Instance.CurrentState == GameState.PlayLevel)
+        {
+            var currentView = ViewHandler.Instance.GetActiveView();
+            currentView.Hide();
+            ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.RESULTS, true);
+            GameManager.Instance.PlayerLost();
+            GameManager.Instance.CurrentState = GameState.ViewResults;
+        }
     }
+
 }

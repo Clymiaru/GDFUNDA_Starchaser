@@ -5219,7 +5219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiRoot: {fileID: 9209090614811522416}
   screenPrefabLocation: UI
-  firstScreen: MainMenuScreen
+  firstScreen: DummyScreen
   activeViews: []
   viewPool: []
 --- !u!114 &9106201042033894038

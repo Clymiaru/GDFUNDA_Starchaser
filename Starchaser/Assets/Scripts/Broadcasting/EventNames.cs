@@ -50,6 +50,12 @@ public class EventNames {
 		public const string ON_FIRST_SCAN = "FIRST_TARGET_SCAN";
 		public const string ON_FINAL_SCAN = "ON_FINAL_SCAN";
 	}
+
+	public class Starchaser
+    {
+		public const string ON_LEVEL_BEGIN = "LEVEL_BEGIN";
+		public const string ON_LEVEL_END = "LEVEL_END";
+    }
 }
 
 

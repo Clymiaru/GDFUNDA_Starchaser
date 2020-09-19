@@ -2,19 +2,125 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class GameManager
+public enum GameState
+{ 
+    MainMenu,
+    ChooseLevel,
+    LevelIntro,
+    PlayLevel,
+    ViewResults
+}
+
+public enum PlayerStatus
+{ 
+    Won, 
+    Lost
+}
+
+
+public class GameManager
 {
-    public static bool isLevelFinished { get; private set; } = false;
+    private static GameManager sharedInstance = null;
 
-    public static void LevelIsFinished()
+    private GameState currentState = GameState.MainMenu;
+    private bool isPaused = false;
+    private LevelData currentLevelData;
+    private PlayerStatus playerStatus;
+    TimeData currentAchievedTime;
+
+    public static GameManager Instance
     {
-        isLevelFinished = true;
-        
-        // Save current time data and level id
+        get
+        {
+            if (sharedInstance == null)
+            {
+                sharedInstance = new GameManager();
+
+                LevelManager.Instance.PreLoadLevelInformation("Levels");
+            }
+
+            return sharedInstance;
+        }
     }
 
-    public static void SetLevelData()
+    public void UpdateCurrentLevelData(int currentID)
     {
+        currentLevelData = LevelManager.Instance.GetLevel(currentID).Data;
+    }
+
+    public bool IsPaused
+    {
+        get
+        {
+            return isPaused;
+        }
+    }
+    
+
+    public GameState CurrentState
+    { 
+        get
+        {
+            return currentState;
+        }
+        set
+        {
+            currentState = value;
+        }
+    }
+
+    public void SaveAchievedTime(TimeData timeData)
+    {
+        currentAchievedTime = timeData;
+
+        //PlayerPrefs.SetFloat()
+
+
+
+
 
     }
+
+    public TimeData AchievedTime
+    {
+        get
+        {
+            return currentAchievedTime;
+        }
+    }
+
+    public LevelData CurrentLevelData
+    {
+        get
+        {
+            return currentLevelData;
+        }
+    }
+
+    public PlayerStatus Status
+    {
+        get
+        {
+            return playerStatus;
+        }
+    }
+
+    public void PlayerWon()
+    {
+        playerStatus = PlayerStatus.Won;
+    }
+
+    public void PlayerLost()
+    {
+        playerStatus = PlayerStatus.Lost;
+    }
+
+    public string Rank
+    {
+        get
+        {
+            return "A";
+        }
+    }
+
 }
