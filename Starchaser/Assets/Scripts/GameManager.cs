@@ -24,7 +24,9 @@ public class GameManager
 
     private GameState currentState = GameState.MainMenu;
     private bool isPaused = false;
-    private LevelData currentLevelData;
+
+
+    private Level currentLevelData;
     private PlayerStatus playerStatus;
     TimeData currentAchievedTime;
 
@@ -36,16 +38,23 @@ public class GameManager
             {
                 sharedInstance = new GameManager();
 
-                LevelManager.Instance.PreLoadLevelInformation("Levels");
+                //EventBroadcaster.Instance.AddObserver(EventNames.Starchaser.ON_GAME_STATE_SWITCH, );
+
             }
 
             return sharedInstance;
         }
     }
 
+    private void SwitchGameState(Parameters param)
+    {
+        currentState = (GameState)param.GetIntExtra("GameState", 0);
+    }
+
+
     public void UpdateCurrentLevelData(int currentID)
     {
-        currentLevelData = LevelManager.Instance.GetLevel(currentID).Data;
+        currentLevelData = LevelManager.Instance.GetLevel(currentID);
     }
 
     public bool IsPaused
@@ -57,46 +66,15 @@ public class GameManager
     }
     
 
-    public GameState CurrentState
-    { 
-        get
-        {
-            return currentState;
-        }
-        set
-        {
-            currentState = value;
-        }
-    }
+    public GameState CurrentState { get => currentState; }
 
     public void SaveAchievedTime(TimeData timeData)
     {
         currentAchievedTime = timeData;
     }
-
-    public TimeData AchievedTime
-    {
-        get
-        {
-            return currentAchievedTime;
-        }
-    }
-
-    public LevelData CurrentLevelData
-    {
-        get
-        {
-            return currentLevelData;
-        }
-    }
-
-    public PlayerStatus Status
-    {
-        get
-        {
-            return playerStatus;
-        }
-    }
+    public TimeData AchievedTime { get => currentAchievedTime; }
+    public Level CurrentLevelData { get => currentLevelData; }
+    public PlayerStatus Status { get => playerStatus; }
 
     public void PlayerWon()
     {
@@ -108,13 +86,6 @@ public class GameManager
         playerStatus = PlayerStatus.Lost;
         Debug.Log("Status changed");
     }
-
-    public string Rank
-    {
-        get
-        {
-            return "A";
-        }
-    }
+    public string Rank { get => "A"; }
 
 }

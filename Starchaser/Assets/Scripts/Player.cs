@@ -40,7 +40,7 @@ public class Player : PlayerTeamEntity
             currentView.Hide();
             ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.RESULTS, true);
             
-            GameManager.Instance.CurrentState = GameState.ViewResults;
+            //GameManager.Instance.CurrentState = GameState.ViewResults;
         }
     }
 

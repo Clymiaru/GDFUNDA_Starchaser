@@ -25,6 +25,6 @@ public class ResultsScreen : View
         this.Hide();
         LoadManager.Instance.LoadScene("Pre-Level");
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
-        GameManager.Instance.CurrentState = GameState.ChooseLevel;
+        //GameManager.Instance.CurrentState = GameState.ChooseLevel;
     }
 }

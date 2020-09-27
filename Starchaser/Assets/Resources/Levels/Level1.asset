@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8f0bd689405b94faa846be289b6dce, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  levelName: Leo Labyrinth
-  levelImage: {fileID: 21300000, guid: 9929c802ae796984d883e671c7e3d8f1, type: 3}
+  levelName: Scorpio Labyrinth
+  levelImage: {fileID: 21300000, guid: dd7bd705829c2fc449a0c13dc087f3ea, type: 3}
   timeRequiredForRankA:
-    milliseconds: 0
-    seconds: 0
-    minutes: 4
+    milliseconds: 139
+    seconds: 66
+    minutes: 5
   timeRequiredForRankS:
-    milliseconds: 0
-    seconds: 30
-    minutes: 3
+    milliseconds: 1
+    seconds: 11
+    minutes: 4
   levelSceneName: Level1
-  isUnlocked: 1
-  achievedRank: 5
+  isUnlocked: 0
+  achievedRank: 4
   achievedTime:
     milliseconds: 0
     seconds: 0

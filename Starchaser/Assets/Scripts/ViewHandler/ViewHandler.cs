@@ -263,7 +263,7 @@ public class ViewHandler : MonoBehaviour {
 		}
 
 		GameObject gObj = GameObject.Instantiate(prefabObj) as GameObject;
-		gObj.transform.parent = uiRoot.transform;
+		gObj.transform.SetParent(uiRoot.transform);
 		gObj.transform.localScale = Vector3.one;
 		gObj.transform.localPosition = Vector3.zero;
 		gObj.transform.localRotation = Quaternion.identity;

@@ -1,36 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-//public struct LevelData
-//{
-//	bool IsUnlocked { get; }
 
-//	public string Name { get; }
-
-//	public enum Rank
-//	{
-//		None,
-//		RankD,
-//		RankC,
-//		RankB,
-//		RankA,
-//		RankS
-//	}
-
-//	public Rank AchievedRank { get; }
-
-//	Time AchievedTime { get; } // Store the most quickest time recorded
-
-//	Time TimeRequiredForRankA { get; }
-
-//	Time TimeRequiredForRankS { get; }
-//	int AchievedScore { get; }
-//}
-
-//Cache level necessary information
+//Cache level information
 public class LevelManager
 {
 	private static LevelManager sharedInstance = null;
@@ -41,58 +15,47 @@ public class LevelManager
 			if (sharedInstance == null)
 			{
 				sharedInstance = new LevelManager();
+				LevelManager.Instance.PreLoadLevels("Levels");
 			}
-
 			return sharedInstance;
 		}
 	}
 
-	private bool hasLoadedLevels;
+	private List<Level> levelCache;
+	private Level currentLevel;
 
-	private List<Level> levelCache = new List<Level>();
+	private readonly int minLevelID = 0;
+	private int maxLevelID;
 
-	public void PreLoadLevelInformation(string levelsPath)
+	// Load all levels
+	public void PreLoadLevels(string levelsPath)
     {
-		// Load all levels
-		int id = 1;
-		LevelData data;
+		levelCache = new List<Level>();
+		int id = minLevelID;
+		Level data;
 		do
 		{
-			data = Resources.Load<LevelData>($"{levelsPath}/Level" + id);
+			data = Resources.Load<Level>($"{levelsPath}/Level" + id);
 			if (data != null)
 			{
-				levelCache.Add(new Level(data));
+				levelCache.Add(data);
 			}
 			id++;
 		} while (data != null);
-	}
 
-	public void LoadLevel(int levelID)
-    {
-		if (levelID < 0 || levelID > levelCache.Count)
-		{
-			Debug.LogError("Attempting to access an undefined level of ID " + levelID);
-			return;
-		}
-		LoadManager.Instance.LoadScene("Level" + levelID);
-    }
+		maxLevelID = levelCache.Count;
+	}
 
 	public Level GetLevel(int levelID)
     {
-		if (levelID < 0 || levelID > levelCache.Count)
+		if (levelID < minLevelID || levelID > maxLevelID)
         {
-			Debug.LogError("Attempting to access an undefined level of ID " + levelID);
+			Debug.LogError($"Attempting to access an undefined level of ID {levelID}");
 			return null;
         }
 
 		return levelCache[levelID];
     }
 
-	public int LevelCount
-    { 
-		get
-        {
-			return levelCache.Count;
-        }
-	}
+	public int LevelCount { get => levelCache.Count; }
 }

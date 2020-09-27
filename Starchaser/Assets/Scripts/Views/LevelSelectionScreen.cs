@@ -8,7 +8,6 @@ using TMPro;
 public class LevelSelectionScreen : View
 {
     [SerializeField] private Image currentLevelImage;
-
     [SerializeField] private Button prevButton;
     [SerializeField] private TMP_Text currentLevelLabel;
     [SerializeField] private Button nextButton;
@@ -20,8 +19,15 @@ public class LevelSelectionScreen : View
     //[SerializeField] private TMP_Text rankSRequirementInfo;
 
     private int currentLevelID = 0;
-    private int minLevels = 0;
-    private int maxLevels = 3;
+    private int minLevelID = 0;
+    private int maxLevelID = 3;
+
+    private void Start()
+    {
+        currentLevelID = PlayerPrefs.GetInt("LevelID", minLevelID);
+        maxLevelID = LevelManager.Instance.LevelCount - 1;
+        UpdateCurrentLevel();
+    }
 
     public void OnReturnToMainMenuButtonClick()
     {
@@ -29,30 +35,22 @@ public class LevelSelectionScreen : View
         this.Hide();
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
         PlayerPrefs.SetInt("LevelID", currentLevelID);
-        GameManager.Instance.CurrentState = GameState.MainMenu;
+        //GameManager.Instance.CurrentState = GameState.MainMenu;
     }
 
     public void OnExploreButtonClick()
     {
         Debug.Log("<color=red>LevelSelectionScreen</color> Explore was Clicked!");
-        Debug.Log("Go to Level: " + LevelManager.Instance.GetLevel(currentLevelID).Data.Name);
+        Debug.Log("Go to Level: " + LevelManager.Instance.GetLevel(currentLevelID).Name);
 
         PlayerPrefs.SetInt("LevelID", currentLevelID);
 
         this.Hide();
         GameManager.Instance.UpdateCurrentLevelData(currentLevelID);
 
-        GameManager.Instance.CurrentState = GameState.PlayLevel;
+        //GameManager.Instance.CurrentState = GameState.PlayLevel;
 
-        LoadManager.Instance.LoadScene(LevelManager.Instance.GetLevel(currentLevelID).Data.LevelScene);
-    }
-
-    private void Start()
-    {
-        
-        currentLevelID = PlayerPrefs.GetInt("LevelID", 0);
-        maxLevels = LevelManager.Instance.LevelCount - 1;
-        UpdateCurrentLevel();
+        LoadManager.Instance.LoadScene(LevelManager.Instance.GetLevel(currentLevelID).LevelScene);
     }
 
     public void OnPrevLevelButtonClicked()
@@ -69,10 +67,10 @@ public class LevelSelectionScreen : View
 
     public void UpdateCurrentLevel()
     {
-        currentLevelID = Mathf.Clamp(currentLevelID, minLevels, maxLevels);
+        currentLevelID = Mathf.Clamp(currentLevelID, minLevelID, maxLevelID);
         PlayerPrefs.SetInt("Starchaser-LevelSelection-SelectedLevelID", currentLevelID);
         
-        if (currentLevelID <= minLevels)
+        if (currentLevelID <= minLevelID)
         {
             HideButton(prevButton);
         }
@@ -81,7 +79,7 @@ public class LevelSelectionScreen : View
             ShowButton(prevButton);
         }
 
-        if (currentLevelID >= maxLevels)
+        if (currentLevelID >= maxLevelID)
         {
             HideButton(nextButton);
         }
@@ -96,7 +94,7 @@ public class LevelSelectionScreen : View
 
     private void UpdateLevelInfo(Level level)
     {
-        var levelData = level.Data;
+        var levelData = level;
 
         currentLevelLabel.text = levelData.Name;
         currentLevelImage.sprite = levelData.Image;
@@ -110,6 +108,14 @@ public class LevelSelectionScreen : View
 
         //var sData = levelData.SRankRequirement;
         //rankSRequirementInfo.text = sData.ToString();
+    }
+
+    private void UpdateLevelImage(Level level)
+    {
+        if (level.Data.IsUnlocked)
+        {
+            currentLevelImage.sprite = level.Data.Image;
+        }
     }
 
     //private void UpdateAchievedRankInfo(Rank rank)
@@ -147,18 +153,11 @@ public class LevelSelectionScreen : View
     //            break;
     //        }
     //    }
-        
+
     //}
 
-    private void HideButton(Button toHide)
-    {
-        toHide.interactable = false;
-    }
-
-    private void ShowButton(Button toHide)
-    {
-        toHide.interactable = true;
-    }
+    private void HideButton(Button toHide) => toHide.interactable = false;
+    private void ShowButton(Button toHide) => toHide.interactable = true;
 
     
 }
