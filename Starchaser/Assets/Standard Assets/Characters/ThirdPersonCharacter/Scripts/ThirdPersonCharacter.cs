@@ -211,8 +211,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				float chargedJumpPower = 1 + Mathf.Min(m_currentChargeDuration, m_MaxChargeJumpDuration) * 0.5f;
 				//m_Rigidbody.velocity *= m_JumpDistance;
-				Vector3 horizontalVel = Vector3.ProjectOnPlane(m_Rigidbody.velocity, transform.TransformDirection(Vector3.up));
-				float velMagnitude = horizontalVel.magnitude * (0.25f + Mathf.Min(m_currentChargeDuration, m_MaxChargeJumpDuration) * 6);
+				//Vector3 horizontalVel = Vector3.ProjectOnPlane(m_Rigidbody.velocity, transform.TransformDirection(Vector3.up));
+				//float velMagnitude = horizontalVel.magnitude * (0.25f + Mathf.Min(m_currentChargeDuration, m_MaxChargeJumpDuration) * 6);
 				m_Rigidbody.velocity *= 0;
 				// jump!
 				if (transform.rotation.eulerAngles.z > -10 && transform.rotation.eulerAngles.z < 10)
@@ -243,7 +243,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 				{
 					m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -m_JumpPower * chargedJumpPower, m_Rigidbody.velocity.z);
 				}
-				m_Rigidbody.AddForce(transform.TransformDirection(Vector3.forward) * m_JumpDistance * velMagnitude);
+				//m_Rigidbody.AddForce(transform.TransformDirection(Vector3.forward) * m_JumpDistance * velMagnitude);
 				m_IsGrounded = false;
 				m_Animator.applyRootMotion = false;
 				m_GroundCheckDistance = 0.1f;
@@ -287,13 +287,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 #endif
 			// 0.1f is a small offset to start the ray from inside the character
 			// it is also good to note that the transform position in the sample assets is at the base of the character
-			if (m_ChargingJump)
+			/*if (m_ChargingJump)
 			{
 				m_GroundNormal = transform.TransformDirection(Vector3.up);
 				m_IsGrounded = true;
 			}
 			else
-			{
+			{*/
 				if (Physics.Raycast(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), transform.TransformDirection(Vector3.down), out hitInfo, m_GroundCheckDistance))
 				{
 					if (!hitInfo.collider.isTrigger)
@@ -310,7 +310,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					m_GroundNormal = transform.TransformDirection(Vector3.up);
 					m_Animator.applyRootMotion = false;
 				}
-			}
+			//}
 		}
 	}
 }

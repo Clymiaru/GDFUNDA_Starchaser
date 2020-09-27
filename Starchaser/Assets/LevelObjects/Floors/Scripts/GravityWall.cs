@@ -15,6 +15,7 @@ public class GravityWall : MonoBehaviour
             {
                 if (!player.m_IsGrounded)
                 {
+                    Debug.Log(transform.TransformDirection(Vector3.down));
                     Physics.gravity = transform.TransformDirection(Vector3.down * 9.81f);
                     if (this.transform.rotation.eulerAngles.z == 90)
                     {
