@@ -15,7 +15,6 @@ public class LevelManager
 			if (sharedInstance == null)
 			{
 				sharedInstance = new LevelManager();
-				LevelManager.Instance.PreLoadLevels("Levels");
 			}
 			return sharedInstance;
 		}
@@ -56,6 +55,23 @@ public class LevelManager
 
 		return levelCache[levelID];
     }
+
+	public void LoadLevel(int levelID)
+    {
+		var level = GetLevel(levelID);
+
+		if (level != null)
+        {
+			Debug.Log("Current level");
+
+			var param = new Parameters();
+			param.PutExtra("GameState", (int)GameState.PlayLevel);
+			EventBroadcaster.Instance.PostEvent(EventNames.Starchaser.ON_GAME_STATE_SWITCH, param);
+
+			// TODO: Entrance Scene Transition
+			LoadManager.Instance.LoadScene(level.LevelScene);
+		}
+	}
 
 	public int LevelCount { get => levelCache.Count; }
 }

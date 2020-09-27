@@ -25,8 +25,6 @@ public class GameManager
     private GameState currentState = GameState.MainMenu;
     private bool isPaused = false;
 
-
-    private Level currentLevelData;
     private PlayerStatus playerStatus;
     TimeData currentAchievedTime;
 
@@ -38,54 +36,28 @@ public class GameManager
             {
                 sharedInstance = new GameManager();
 
+                EventBroadcaster.Instance.AddObserver(EventNames.Starchaser.ON_GAME_STATE_SWITCH, GameManager.Instance.SwitchGameState);
                 //EventBroadcaster.Instance.AddObserver(EventNames.Starchaser.ON_GAME_STATE_SWITCH, );
-
             }
 
             return sharedInstance;
         }
     }
 
-    private void SwitchGameState(Parameters param)
+    public void SwitchGameState(Parameters param)
     {
         currentState = (GameState)param.GetIntExtra("GameState", 0);
+        Debug.Log(currentState);
     }
 
-
-    public void UpdateCurrentLevelData(int currentID)
-    {
-        currentLevelData = LevelManager.Instance.GetLevel(currentID);
-    }
-
-    public bool IsPaused
-    {
-        get
-        {
-            return isPaused;
-        }
-    }
-    
-
+    public bool IsPaused { get => isPaused; }
     public GameState CurrentState { get => currentState; }
 
-    public void SaveAchievedTime(TimeData timeData)
-    {
-        currentAchievedTime = timeData;
-    }
+    public void SaveAchievedTime(TimeData timeData) => currentAchievedTime = timeData;
     public TimeData AchievedTime { get => currentAchievedTime; }
-    public Level CurrentLevelData { get => currentLevelData; }
     public PlayerStatus Status { get => playerStatus; }
-
-    public void PlayerWon()
-    {
-        playerStatus = PlayerStatus.Won;
-    }
-
-    public void PlayerLost()
-    {
-        playerStatus = PlayerStatus.Lost;
-        Debug.Log("Status changed");
-    }
+    public void PlayerWon() =>  playerStatus = PlayerStatus.Won;
+    public void PlayerLost() => playerStatus = PlayerStatus.Lost;
     public string Rank { get => "A"; }
 
 }

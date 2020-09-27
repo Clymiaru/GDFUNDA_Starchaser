@@ -4,25 +4,18 @@ using UnityEngine;
 
 public class DummyScreen : View
 {
-    private bool hasProcessed = false;
-    void Update()
+    private void Start()
     {
-        if (!hasProcessed)
+        if (GameManager.Instance.CurrentState == GameState.MainMenu)
         {
-            if (GameManager.Instance.CurrentState == GameState.MainMenu)
-            {
-                this.Hide();
-                ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
-            }
-
-            if (GameManager.Instance.CurrentState == GameState.ChooseLevel)
-            {
-                this.Hide();
-                ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
-            }
-
-            hasProcessed = true;
+            this.Hide();
+            ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
         }
-        
+
+        if (GameManager.Instance.CurrentState == GameState.ChooseLevel)
+        {
+            this.Hide();
+            ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
+        }
     }
 }

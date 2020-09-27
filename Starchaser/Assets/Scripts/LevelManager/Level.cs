@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public enum Rank
 {
@@ -53,70 +50,15 @@ public class Level : ScriptableObject
 
     public string Name
     {
-        get
-        {
-            return levelName;
-        }
-        set
-        {
-            levelName = value;
-        }
+        get => levelName;
+        set => levelName = value;
     }
 
-    public string LevelScene
-    { 
-        get
-        {
-            return levelSceneName;
-        }
-    }
-
-
-    public Sprite Image
-    {
-        get
-        {
-            return levelImage;
-        }
-    }
-
-    public TimeData ARankRequirement
-    {
-        get
-        {
-            return timeRequiredForRankA;
-        }
-    }
-
-    public TimeData SRankRequirement
-    {
-        get
-        {
-            return timeRequiredForRankS;
-        }
-    }
-
-    public bool IsUnlocked
-    {
-        get
-        {
-            return isUnlocked;
-        }
-    }
-
-    public Rank AchievedRank
-    {
-        get
-        {
-            return achievedRank;
-        }
-    }
-
-    public TimeData AchievedTime
-    {
-        get
-        {
-            return achievedTime;
-        }
-    }
+    public string LevelScene { get => levelSceneName; }
+    public Sprite Image { get => levelImage; }
+    public TimeData ARankRequirement { get => timeRequiredForRankA; }
+    public TimeData SRankRequirement { get => timeRequiredForRankS; }
+    public bool IsUnlocked { get => isUnlocked; }
+    public Rank AchievedRank { get => achievedRank; }
+    public TimeData AchievedTime { get => achievedTime; }
 }

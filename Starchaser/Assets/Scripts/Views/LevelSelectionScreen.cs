@@ -32,6 +32,7 @@ public class LevelSelectionScreen : View
     public void OnReturnToMainMenuButtonClick()
     {
         Debug.Log("<color=red>LevelSelectionScreen</color> Return to Main Menu was Clicked!");
+
         this.Hide();
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
         PlayerPrefs.SetInt("LevelID", currentLevelID);
@@ -41,16 +42,10 @@ public class LevelSelectionScreen : View
     public void OnExploreButtonClick()
     {
         Debug.Log("<color=red>LevelSelectionScreen</color> Explore was Clicked!");
-        Debug.Log("Go to Level: " + LevelManager.Instance.GetLevel(currentLevelID).Name);
-
         PlayerPrefs.SetInt("LevelID", currentLevelID);
 
         this.Hide();
-        GameManager.Instance.UpdateCurrentLevelData(currentLevelID);
-
-        //GameManager.Instance.CurrentState = GameState.PlayLevel;
-
-        LoadManager.Instance.LoadScene(LevelManager.Instance.GetLevel(currentLevelID).LevelScene);
+        LevelManager.Instance.LoadLevel(currentLevelID);
     }
 
     public void OnPrevLevelButtonClicked()
@@ -94,10 +89,8 @@ public class LevelSelectionScreen : View
 
     private void UpdateLevelInfo(Level level)
     {
-        var levelData = level;
-
-        currentLevelLabel.text = levelData.Name;
-        currentLevelImage.sprite = levelData.Image;
+        currentLevelLabel.text = level.Name;
+        UpdateLevelImage(level);
 
         //var achievedTime = levelData.AchievedTime;
         //timeInfo.text = achievedTime.ToString();
@@ -112,9 +105,9 @@ public class LevelSelectionScreen : View
 
     private void UpdateLevelImage(Level level)
     {
-        if (level.Data.IsUnlocked)
+        if (level.IsUnlocked)
         {
-            currentLevelImage.sprite = level.Data.Image;
+            currentLevelImage.sprite = level.Image;
         }
     }
 

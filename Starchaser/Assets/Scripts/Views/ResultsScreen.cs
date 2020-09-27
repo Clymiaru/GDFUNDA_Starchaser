@@ -14,7 +14,7 @@ public class ResultsScreen : View
         TimeData current = GameManager.Instance.AchievedTime;
         timeInfo.text = current.ToString();
 
-        levelName.text = GameManager.Instance.CurrentLevelData.Name;
+        //levelName.text = GameManager.Instance.CurrentLevelData.Name;
 
         statusInfo.text = (GameManager.Instance.Status == PlayerStatus.Won) ? "Stage All Clear!!" : "You Died :)";
 
