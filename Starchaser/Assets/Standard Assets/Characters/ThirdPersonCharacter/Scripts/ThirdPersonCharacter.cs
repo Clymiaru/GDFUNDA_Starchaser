@@ -287,13 +287,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 #endif
 			// 0.1f is a small offset to start the ray from inside the character
 			// it is also good to note that the transform position in the sample assets is at the base of the character
-			/*if (m_ChargingJump)
+			if (m_ChargingJump)
 			{
 				m_GroundNormal = transform.TransformDirection(Vector3.up);
 				m_IsGrounded = true;
 			}
 			else
-			{*/
+			{
 				if (Physics.Raycast(transform.position + (transform.TransformDirection(Vector3.up) * 0.1f), transform.TransformDirection(Vector3.down), out hitInfo, m_GroundCheckDistance))
 				{
 					if (!hitInfo.collider.isTrigger)
@@ -310,7 +310,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 					m_GroundNormal = transform.TransformDirection(Vector3.up);
 					m_Animator.applyRootMotion = false;
 				}
-			//}
+			}
 		}
 	}
 }
