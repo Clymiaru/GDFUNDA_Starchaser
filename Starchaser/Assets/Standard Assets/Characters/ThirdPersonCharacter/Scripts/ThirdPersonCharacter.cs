@@ -33,7 +33,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		float m_MaxChargeJumpDuration = 1.0f;
 		bool m_ChargingJump = false;
 		float m_currentChargeDuration = 0;
-		float m_JumpDistance = 20f;
+		public bool hasChangedOrientationRecently = false;
 
 		void Start()
 		{
@@ -46,7 +46,6 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			m_OrigGroundCheckDistance = m_GroundCheckDistance;
 		}
-
 
 		public void Move(Vector3 move, bool crouch, bool jump)
 		{
