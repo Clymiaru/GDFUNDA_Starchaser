@@ -435,7 +435,6 @@ MonoBehaviour:
   levelName: {fileID: 6881628977815211159}
   timeInfo: {fileID: 6881628978009725258}
   statusInfo: {fileID: 6881628977645811129}
-  rankInfo: {fileID: 0}
 --- !u!222 &347890506180115337
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1093,7 +1092,7 @@ GameObject:
   - component: {fileID: 6881628978197601141}
   - component: {fileID: 6261805161147498976}
   m_Layer: 5
-  m_Name: TimeAndRank
+  m_Name: Time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

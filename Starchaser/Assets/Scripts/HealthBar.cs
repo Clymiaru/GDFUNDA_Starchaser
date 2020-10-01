@@ -18,6 +18,6 @@ public class HealthBar : MonoBehaviour
 
     void UpdateHealthBar(Parameters param)
     {
-        slider.value = param.GetFloatExtra("PlayerHealth", 0.0f) / slider.maxValue;
+        slider.value = param.GetIntExtra("PlayerHealth", 0);
     }
 }
