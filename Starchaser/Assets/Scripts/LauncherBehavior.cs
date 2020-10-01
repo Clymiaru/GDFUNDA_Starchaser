@@ -12,6 +12,7 @@ public class LauncherBehavior : MonoBehaviour
             other.GetComponent<UnityStandardAssets.Characters.ThirdPerson.ThirdPersonCharacter>();
         if (player != null)
         {
+            player.isBoosted = true;
             player.gameObject.GetComponent<Rigidbody>().AddForce(transform.TransformDirection(Vector3.left) * forwardThrust +
                  transform.TransformDirection(Vector3.up) * upwardThrust);
         }
