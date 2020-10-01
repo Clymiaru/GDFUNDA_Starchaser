@@ -43,9 +43,7 @@ public class LevelSelectionScreen : View
     {
         Debug.Log("<color=red>LevelSelectionScreen</color> Explore was Clicked!");
 
-        var param = new Parameters();
-        param.PutExtra("GameState", (int)GameState.PlayLevel);
-        EventBroadcaster.Instance.PostEvent(EventNames.Starchaser.ON_GAME_STATE_SWITCH, param);
+        GameManager.Instance.SetState(GameState.PlayLevel);
 
         this.Hide();
         LevelManager.Instance.LoadLevel(currentLevelID);

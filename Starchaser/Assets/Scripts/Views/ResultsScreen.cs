@@ -22,12 +22,11 @@ public class ResultsScreen : View
     public void OnEndButtonClick()
     {
         Debug.Log("<color=red>ResultsHUD</color> End was Clicked!");
+
+        GameManager.Instance.SetState(GameState.ChooseLevel);
+
         this.Hide();
         LoadManager.Instance.LoadScene("Pre-Level");
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
-
-        Parameters param = new Parameters();
-        param.PutExtra("GameState", (int)GameState.ChooseLevel);
-        GameManager.Instance.SwitchGameState(param);
     }
 }

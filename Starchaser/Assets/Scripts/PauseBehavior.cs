@@ -49,9 +49,7 @@ public class PauseBehavior : MonoBehaviour
 
         if (isQuit)
         {
-            Parameters param = new Parameters();
-            param.PutExtra("GameState", (int)GameState.ChooseLevel);
-            GameManager.Instance.SwitchGameState(param);
+            GameManager.Instance.SetState(GameState.ChooseLevel);
             LoadManager.Instance.LoadScene(SceneNames.PRE_LEVEL_SCENE);
         }
     }

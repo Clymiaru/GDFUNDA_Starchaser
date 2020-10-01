@@ -36,13 +36,16 @@ public class GameManager
                 sharedInstance = new GameManager();
 
                 EventBroadcaster.Instance.AddObserver(EventNames.Starchaser.ON_GAME_STATE_SWITCH, GameManager.Instance.SwitchGameState);
-                //EventBroadcaster.Instance.AddObserver(EventNames.Starchaser.ON_GAME_STATE_SWITCH, );
             }
 
             return sharedInstance;
         }
     }
 
+    public void SetState(GameState state)
+    {
+        currentState = state;
+    }
     public void SwitchGameState(Parameters param)
     {
         currentState = (GameState)param.GetIntExtra("GameState", 0);

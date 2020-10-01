@@ -1982,6 +1982,10 @@ MonoBehaviour:
   m_GroundCheckDistance: 0.3
   m_Rigidbody: {fileID: 0}
   m_IsGrounded: 0
+  hasChangedOrientationRecently: 0
+  isBoosted: 0
+  ChargeSFX: {fileID: 0}
+  SFXPlayer: {fileID: 0}
 --- !u!114 &413106831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1994,6 +1998,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f4de18fa21e00646aa978aa88a9f3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hurtSFX: {fileID: 0}
+  SFXPlayer: {fileID: 0}
   maxHP: 100
 --- !u!114 &413106838
 MonoBehaviour:
