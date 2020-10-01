@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    private float speed = 250;
+    private float speed = 500;
     private UnityStandardAssets.Characters.ThirdPerson.ThirdPersonCharacter chara;
     private GameObject rotationReference;
     private Rigidbody rigidBody;
@@ -28,6 +28,7 @@ public class Movement : MonoBehaviour
             speed /= 25;
         else if (Input.GetKeyUp(KeyCode.Space))
             speed *= 25;
+
         if (!chara.m_IsGrounded && !chara.isBoosted)
         {
             float horizontalMovement = Input.GetAxis("Horizontal");
