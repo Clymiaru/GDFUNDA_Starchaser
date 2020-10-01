@@ -34,6 +34,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		bool m_ChargingJump = false;
 		float m_currentChargeDuration = 0;
 		public bool hasChangedOrientationRecently = false;
+		public bool isBoosted = false;
 
 		void Start()
 		{
@@ -290,6 +291,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			{
 				m_GroundNormal = transform.TransformDirection(Vector3.up);
 				m_IsGrounded = true;
+				isBoosted = false;
 			}
 			else
 			{
@@ -301,6 +303,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 						m_IsGrounded = true;
 						m_Animator.applyRootMotion = true;
 						m_JumpCount = 0;
+						isBoosted = false;
 					}
 				}
 				else
