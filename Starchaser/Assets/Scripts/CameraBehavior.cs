@@ -39,7 +39,11 @@ public class CameraBehavior : MonoBehaviour
         verticalRotation.transform.localRotation = Quaternion.Euler(new Vector3(xRotation, 0, 0));*/
 
         float cameraZoom = Input.GetAxis("Mouse ScrollWheel");
-        freelook.m_Lens.FieldOfView += cameraZoom * zoomSpeed;
+        freelook.m_Lens.FieldOfView -= cameraZoom * zoomSpeed;
+        if (freelook.m_Lens.FieldOfView > 75)
+            freelook.m_Lens.FieldOfView = 75;
+        else if (freelook.m_Lens.FieldOfView < 30)
+            freelook.m_Lens.FieldOfView = 30;
 
         //Camera.main.GetComponent<Transform>().localPosition = Camera.main.GetComponent<Transform>().localPosition * (1 - cameraZoom);
     }
