@@ -50,9 +50,11 @@ public class EventNames {
 	//	public const string ON_FINAL_SCAN = "ON_FINAL_SCAN";
 	//}
 
+	// Custom Game Events
 	public class Starchaser
     {
 		public const string ON_START_GAME = "START_GAME";
+
 		public const string ON_PLAYER_HEALTH_UPDATE = "PLAYER_HEALTH_UPDATE";
 		public const string ON_GAME_STATE_SWITCH = "GAME_STATE_SWITCH";
 		public const string ON_LEVEL_BEGIN = "LEVEL_BEGIN";
