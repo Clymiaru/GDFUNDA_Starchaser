@@ -20,14 +20,24 @@ public class PauseBehavior : MonoBehaviour
 
     private void PauseGame()
     {
+        // Trigger Animation transition (Fade in)
         pauseScreen.SetActive(true);
         Time.timeScale = 0;
     }
 
     public void ResumeGame()
     {
+        // Trigger Animation transition (Fade out)
         pauseScreen.SetActive(false);
         Time.timeScale = 1;
+    }
+
+    public void RetryLevel()
+    {
+        // Trigger Animation transition (Fade to black)
+        Time.timeScale = 1;
+        LoadManager.Instance.LoadScene("Pre-Level");
+        ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
     }
 
     public void ExitLevel()
