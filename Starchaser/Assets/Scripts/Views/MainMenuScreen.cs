@@ -4,20 +4,22 @@ using UnityEngine;
 
 public class MainMenuScreen : View
 {
-
     private void Start()
     {
         EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_ENTER_START);
     }
+
     public void OnStartGameClick()
     {
         Debug.Log("<color=red>MainMenuScreen</color> Start Game was Clicked!");
+        EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_EXIT_START);
         GoToLevelSelection();
     }
 
     public void OnEndButtonClick()
     {
         Debug.Log("<color=red>MainMenuScreen</color> End was Clicked!");
+        EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_EXIT_START);
         Application.Quit();
     }
 
@@ -30,5 +32,4 @@ public class MainMenuScreen : View
         this.Hide();
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
     }
-    
 }

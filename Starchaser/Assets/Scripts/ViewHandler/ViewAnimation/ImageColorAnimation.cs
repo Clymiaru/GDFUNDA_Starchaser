@@ -4,29 +4,30 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
-public class ImageFadeAnimation : MonoBehaviour, IViewAnimation
+public class ImageColorAnimation : MonoBehaviour, IViewAnimation
 {
-    [Header("Fade In")]
-    [SerializeField] private Gradient fadeInGradient;
-    [SerializeField] private AnimationCurve fadeInFactor;
-    [SerializeField] private float fadeInDuration = 10.0f;
+    [Header("Entrance")]
+    [SerializeField] private Gradient entranceGradient;
+    [SerializeField] private AnimationCurve entranceTimeFactor;
+    [SerializeField] private float entranceDuration = 10.0f;
 
-    [Header("Fade Out")]
-    [SerializeField] private Gradient fadeOutGradient;
-    [SerializeField] private AnimationCurve fadeoutFactor;
-    [SerializeField] private float fadeOutDuration = 10.0f;
+    [Header("Exit")]
+    [SerializeField] private Gradient exitGradient;
+    [SerializeField] private AnimationCurve exitTimeFactor;
+    [SerializeField] private float extiDuration = 10.0f;
 
     private Image image;
 
     private void Awake()
     {
+        image = GetComponent<Image>();
         EventBroadcaster.Instance.AddObserver(EventNames.UITransition.ON_ENTER_START, PerformEntrance);
         EventBroadcaster.Instance.AddObserver(EventNames.UITransition.ON_EXIT_START, PerformExit);
     }
     private void Start()
     {
-        image = GetComponent<Image>();
-        image.color = fadeInGradient.Evaluate(0.0f);
+        
+        image.color = entranceGradient.Evaluate(0.0f);
     }
 
     private void OnDestroy()
@@ -37,42 +38,42 @@ public class ImageFadeAnimation : MonoBehaviour, IViewAnimation
 
     private void OnValidate()
     {
-        fadeInDuration = Mathf.Max(fadeInDuration, 0.0f);
-        fadeOutDuration = Mathf.Max(fadeOutDuration, 0.0f);
+        entranceDuration = Mathf.Max(entranceDuration, 0.0f);
+        extiDuration = Mathf.Max(extiDuration, 0.0f);
     }
     public void PerformEntrance()
     {
-        StartCoroutine(FadeInAnimation());
+        StartCoroutine(EntranceAnimation());
         EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_ENTER_COMPLETE);
     }
 
     public void PerformExit()
     {
-        StartCoroutine(FadeOutAnimation());
+        StartCoroutine(ExitAnimation());
         EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_EXIT_COMPLETE);
     }
 
-    private IEnumerator FadeInAnimation()
+    private IEnumerator EntranceAnimation()
     {
         float currentTime = 0.0f;
-        while (currentTime < fadeInDuration)
+        while (currentTime < entranceDuration)
         {
             yield return null;
             currentTime += Time.deltaTime;
-            float t = fadeInFactor.Evaluate(currentTime / fadeInDuration);
-            image.color = fadeInGradient.Evaluate(t);
+            float t = entranceTimeFactor.Evaluate(currentTime / entranceDuration);
+            image.color = entranceGradient.Evaluate(t);
         }
     }
 
-    private IEnumerator FadeOutAnimation()
+    private IEnumerator ExitAnimation()
     {
         float currentTime = 0.0f;
-        while (currentTime < fadeOutDuration)
+        while (currentTime < extiDuration)
         {
             yield return null;
             currentTime += Time.deltaTime;
-            float t = fadeoutFactor.Evaluate(currentTime / fadeOutDuration);
-            image.color = fadeOutGradient.Evaluate(t);
+            float t = exitTimeFactor.Evaluate(currentTime / extiDuration);
+            image.color = exitGradient.Evaluate(t);
         }
     }
 }
