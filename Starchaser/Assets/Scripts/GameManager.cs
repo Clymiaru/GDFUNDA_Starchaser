@@ -58,6 +58,5 @@ public class GameManager
     public PlayerStatus Status { get => playerStatus; }
     public void PlayerWon() =>  playerStatus = PlayerStatus.Won;
     public void PlayerLost() => playerStatus = PlayerStatus.Lost;
-    public string Rank { get => "A"; }
 
 }

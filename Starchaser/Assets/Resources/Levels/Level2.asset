@@ -14,18 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Virgo Labyrinth
   levelImage: {fileID: 21300000, guid: a60d4b8d3293e6947818bf336881fa02, type: 3}
-  timeRequiredForRankA:
-    milliseconds: 0
-    seconds: 0
-    minutes: 6
-  timeRequiredForRankS:
-    milliseconds: 0
-    seconds: 30
-    minutes: 5
   levelSceneName: Level2
-  isUnlocked: 0
-  achievedRank: 1
-  achievedTime:
-    milliseconds: 0
-    seconds: 0
-    minutes: 0
+  isUnlocked: 1

@@ -19,6 +19,7 @@ public class LevelSelectionScreen : View
 
     private void Start()
     {
+        // TODO: Save unlocked or locked levels in PlayerPrefs
         currentLevelID = PlayerPrefs.GetInt("LevelID", minLevelID);
         maxLevelID = LevelManager.Instance.LevelCount - 1;
         UpdateCurrentLevel();
@@ -28,19 +29,28 @@ public class LevelSelectionScreen : View
     {
         Debug.Log("<color=red>LevelSelectionScreen</color> Return to Main Menu was Clicked!");
 
+        var param = new Parameters();
+        param.PutExtra("GameState", (int)GameState.MainMenu);
+        EventBroadcaster.Instance.PostEvent(EventNames.Starchaser.ON_GAME_STATE_SWITCH, param);
+
         this.Hide();
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.MAIN_MENU, true);
+
         PlayerPrefs.SetInt("LevelID", currentLevelID);
-        //GameManager.Instance.CurrentState = GameState.MainMenu;
     }
 
     public void OnExploreButtonClick()
     {
         Debug.Log("<color=red>LevelSelectionScreen</color> Explore was Clicked!");
-        PlayerPrefs.SetInt("LevelID", currentLevelID);
+
+        var param = new Parameters();
+        param.PutExtra("GameState", (int)GameState.PlayLevel);
+        EventBroadcaster.Instance.PostEvent(EventNames.Starchaser.ON_GAME_STATE_SWITCH, param);
 
         this.Hide();
         LevelManager.Instance.LoadLevel(currentLevelID);
+
+        PlayerPrefs.SetInt("LevelID", currentLevelID);
     }
 
     public void OnPrevLevelButtonClicked()
