@@ -12,14 +12,9 @@ public class LevelSelectionScreen : View
     [SerializeField] private TMP_Text currentLevelLabel;
     [SerializeField] private Button nextButton;
 
-    //[SerializeField] private TMP_Text timeInfo;
-    //[SerializeField] private TMP_Text rankInfo;
-
-    //[SerializeField] private TMP_Text rankARequirementInfo;
-    //[SerializeField] private TMP_Text rankSRequirementInfo;
-
     private int currentLevelID = 0;
-    private int minLevelID = 0;
+
+    private readonly int minLevelID = 0;
     private int maxLevelID = 3;
 
     private void Start()

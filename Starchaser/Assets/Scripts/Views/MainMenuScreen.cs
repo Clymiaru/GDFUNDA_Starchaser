@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class MainMenuScreen : View
 {
+
+    private void Start()
+    {
+        EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_ENTER_START);
+    }
     public void OnStartGameClick()
     {
         Debug.Log("<color=red>MainMenuScreen</color> Start Game was Clicked!");

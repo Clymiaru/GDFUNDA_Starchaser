@@ -5,7 +5,7 @@ using UnityEngine;
 public class Preloader : MonoBehaviour
 {
     [Tooltip("Path where the Level Data in the Resource Folder is located.")]
-    [SerializeField] private string LevelResourceLocation = "Level";
+    [SerializeField] private string LevelResourceLocation = "Levels";
 
     private void Start()
     {
@@ -15,6 +15,6 @@ public class Preloader : MonoBehaviour
 
     private void Preload()
     {
-        LevelManager.Instance.PreLoadLevels(LevelResourceLocation);
+        LevelManager.Instance.PreLoadLevels("Levels");
     }
 }

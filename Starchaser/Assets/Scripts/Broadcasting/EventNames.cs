@@ -65,6 +65,17 @@ public class EventNames {
 		public const string ON_PAUSE_GAME = "PAUSE_GAME";
 		public const string ON_RESUME_GAME = "RESUME_GAME";
 	}
+
+
+    public class UITransition
+    {
+		public const string ON_ENTER_START = "ON_ENTER_START";
+		public const string ON_ENTER_COMPLETE = "ON_ENTER_COMPLETE";
+
+		public const string ON_EXIT_START = "ON_EXIT_START";
+		public const string ON_EXIT_COMPLETE = "ON_EXIT_COMPLETE";
+	}
+
 }
 
 
