@@ -21,7 +21,7 @@ public class LevelManager
 	}
 
 	private List<Level> levelCache;
-	private Level currentLevel;
+	public Level CurrentLevel { get; private set; }
 
 	private readonly int minLevelID = 0;
 	private int maxLevelID;
@@ -64,11 +64,12 @@ public class LevelManager
         {
 			Debug.Log("Current level");
 
+            CurrentLevel = level;
+
 			var param = new Parameters();
 			param.PutExtra("GameState", (int)GameState.PlayLevel);
 			EventBroadcaster.Instance.PostEvent(EventNames.Starchaser.ON_GAME_STATE_SWITCH, param);
 
-			// TODO: Entrance Scene Transition
 			LoadManager.Instance.LoadScene(level.LevelScene);
 		}
 	}

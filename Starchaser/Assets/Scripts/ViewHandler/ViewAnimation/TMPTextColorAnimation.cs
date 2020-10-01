@@ -59,7 +59,7 @@ public class TMPTextColorAnimation : MonoBehaviour, IViewAnimation
         while (currentTime < entranceDuration)
         {
             yield return null;
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             float t = entranceTimeFactor.Evaluate(currentTime / entranceDuration);
             text.color = entranceGradient.Evaluate(t);
         }
@@ -71,7 +71,7 @@ public class TMPTextColorAnimation : MonoBehaviour, IViewAnimation
         while (currentTime < extiDuration)
         {
             yield return null;
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             float t = exitTimeFactor.Evaluate(currentTime / extiDuration);
             text.color = exitGradient.Evaluate(t);
         }

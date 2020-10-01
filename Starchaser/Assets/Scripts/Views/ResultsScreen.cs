@@ -14,7 +14,7 @@ public class ResultsScreen : View
         TimeData current = GameManager.Instance.AchievedTime;
         timeInfo.text = current.ToString();
 
-        //levelName.text = GameManager.Instance.CurrentLevelData.Name;
+        levelName.text = LevelManager.Instance.CurrentLevel.Name;
 
         statusInfo.text = (GameManager.Instance.Status == PlayerStatus.Won) ? "Stage All Clear!!" : "You Died :)";
 
@@ -25,6 +25,9 @@ public class ResultsScreen : View
         this.Hide();
         LoadManager.Instance.LoadScene("Pre-Level");
         ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
-        //GameManager.Instance.CurrentState = GameState.ChooseLevel;
+
+        Parameters param = new Parameters();
+        param.PutExtra("GameState", (int)GameState.ChooseLevel);
+        GameManager.Instance.SwitchGameState(param);
     }
 }

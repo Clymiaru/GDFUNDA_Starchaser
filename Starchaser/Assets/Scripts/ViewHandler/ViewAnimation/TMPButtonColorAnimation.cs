@@ -63,7 +63,7 @@ public class TMPButtonColorAnimation : MonoBehaviour, IViewAnimation
         while (currentTime < entranceDuration)
         {
             yield return null;
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             float t = entranceTimeFactor.Evaluate(currentTime / entranceDuration);
             buttonImage.color = entranceGradient.Evaluate(t);
         }
@@ -76,7 +76,7 @@ public class TMPButtonColorAnimation : MonoBehaviour, IViewAnimation
         while (currentTime < extiDuration)
         {
             yield return null;
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             float t = exitTimeFactor.Evaluate(currentTime / extiDuration);
             buttonImage.color = exitGradient.Evaluate(t);
         }

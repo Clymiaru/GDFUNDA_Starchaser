@@ -6,44 +6,65 @@ public class PauseBehavior : MonoBehaviour
 {
     [SerializeField] private GameObject pauseScreen;
 
-    // Update is called once per frame
-    void Update()
+    private bool isPaused = false;
+    private bool isQuit = false;
+
+    private void Start()
+    {
+        EventBroadcaster.Instance.AddObserver(EventNames.UITransition.ON_ENTER_COMPLETE, PauseGame);
+        EventBroadcaster.Instance.AddObserver(EventNames.UITransition.ON_EXIT_COMPLETE, ResumeGame);
+    }
+
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!pauseScreen.activeSelf)
-                PauseGame();
+            if (!isPaused)
+            {
+                EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_ENTER_START);
+            }
             else
-                ResumeGame();
+            {
+                EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_EXIT_START);
+            }
         }
+    }
+
+    private void OnDestroy()
+    {
+        EventBroadcaster.Instance.RemoveObserver(EventNames.UITransition.ON_ENTER_COMPLETE);
+        EventBroadcaster.Instance.RemoveObserver(EventNames.UITransition.ON_EXIT_COMPLETE);
     }
 
     private void PauseGame()
     {
-        // Trigger Animation transition (Fade in)
-        pauseScreen.SetActive(true);
+        isPaused = true;
         Time.timeScale = 0;
     }
 
-    public void ResumeGame()
+    private void ResumeGame()
     {
-        // Trigger Animation transition (Fade out)
-        pauseScreen.SetActive(false);
+        isPaused = false;
         Time.timeScale = 1;
+
+        if (isQuit)
+        {
+            Parameters param = new Parameters();
+            param.PutExtra("GameState", (int)GameState.ChooseLevel);
+            GameManager.Instance.SwitchGameState(param);
+            LoadManager.Instance.LoadScene(SceneNames.PRE_LEVEL_SCENE);
+        }
     }
 
-    public void RetryLevel()
+
+    public void OnResumeButtonClick()
     {
-        // Trigger Animation transition (Fade to black)
-        Time.timeScale = 1;
-        LoadManager.Instance.LoadScene("Pre-Level");
-        ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
+        EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_EXIT_START);
     }
 
-    public void ExitLevel()
+    public void OnGiveUpButtonClick()
     {
-        Time.timeScale = 1;
-        LoadManager.Instance.LoadScene("Pre-Level");
-        ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.LEVEL_SELECTION, true);
+        isQuit = true;
+        EventBroadcaster.Instance.PostEvent(EventNames.UITransition.ON_EXIT_START);
     }
 }

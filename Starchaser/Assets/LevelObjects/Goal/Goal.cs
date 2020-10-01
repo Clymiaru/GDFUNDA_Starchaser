@@ -13,7 +13,10 @@ public class Goal : MonoBehaviour
             currentView.Hide();
             ViewHandler.Instance.Show(ViewNames.StarchaserScreenNames.RESULTS, true);
             GameManager.Instance.PlayerWon();
-            //GameManager.Instance.CurrentState = GameState.ViewResults;
+
+            Parameters param = new Parameters();
+            param.PutExtra("GameState", (int)GameState.ViewResults);
+            GameManager.Instance.SwitchGameState(param);
         }
 
     }

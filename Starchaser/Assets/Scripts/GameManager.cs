@@ -6,7 +6,6 @@ public enum GameState
 { 
     MainMenu,
     ChooseLevel,
-    LevelIntro,
     PlayLevel,
     ViewResults
 }

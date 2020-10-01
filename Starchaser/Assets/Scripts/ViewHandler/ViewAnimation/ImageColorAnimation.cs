@@ -59,7 +59,7 @@ public class ImageColorAnimation : MonoBehaviour, IViewAnimation
         while (currentTime < entranceDuration)
         {
             yield return null;
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             float t = entranceTimeFactor.Evaluate(currentTime / entranceDuration);
             image.color = entranceGradient.Evaluate(t);
         }
@@ -71,7 +71,7 @@ public class ImageColorAnimation : MonoBehaviour, IViewAnimation
         while (currentTime < extiDuration)
         {
             yield return null;
-            currentTime += Time.deltaTime;
+            currentTime += Time.unscaledDeltaTime;
             float t = exitTimeFactor.Evaluate(currentTime / extiDuration);
             image.color = exitGradient.Evaluate(t);
         }
