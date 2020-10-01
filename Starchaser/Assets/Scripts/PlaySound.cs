@@ -23,12 +23,7 @@ public class PlaySound : MonoBehaviour
         audioSource.volume = SoundManager.Instance.Volume;
     }
 
-    private void ChangeAudioClip(AudioClip clip)
-    {
-        audioSource.clip = clip;
-    }
-
-    private void PlayClip()
+    public void PlayClip()
     {
         audioSource.Play();
     }
