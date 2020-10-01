@@ -5,19 +5,19 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    private Player player;
-
     [SerializeField] private Slider slider;
 
     void Start()
     {
-        player = FindObjectOfType<Player>();
-        slider.maxValue = player.MaxHealth;
+        EventBroadcaster.Instance.AddObserver(EventNames.Starchaser.ON_PLAYER_HEALTH_UPDATE, UpdateHealthBar);
+    }
+    private void OnDestroy()
+    {
+        EventBroadcaster.Instance.RemoveObserver(EventNames.Starchaser.ON_PLAYER_HEALTH_UPDATE);
     }
 
-    // Update is called once per frame
-    void Update()
+    void UpdateHealthBar(Parameters param)
     {
-        slider.value = player.Health;
+        slider.value = param.GetFloatExtra("PlayerHealth", 0.0f) / slider.maxValue;
     }
 }

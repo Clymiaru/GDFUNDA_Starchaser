@@ -22,7 +22,11 @@ public class SoundManager
     public float Volume
     {
         get => volume;
-        set => volume = Mathf.Clamp(value, 0.0f, 1.0f);
+        set
+        {
+            volume = Mathf.Clamp(value, 0.0f, 1.0f);
+            PlayerPrefs.SetFloat("Volume", volume);
+        }
     }
 
 

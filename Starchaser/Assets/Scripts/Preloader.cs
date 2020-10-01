@@ -16,5 +16,7 @@ public class Preloader : MonoBehaviour
     private void Preload()
     {
         LevelManager.Instance.PreLoadLevels("Levels");
+
+        SoundManager.Instance.Volume = PlayerPrefs.GetFloat("Volume", 1.0f);
     }
 }
