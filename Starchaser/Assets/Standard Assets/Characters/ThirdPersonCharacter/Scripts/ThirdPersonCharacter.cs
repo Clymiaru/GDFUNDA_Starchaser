@@ -36,6 +36,9 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 		public bool hasChangedOrientationRecently = false;
 		public bool isBoosted = false;
 
+		public AudioClip ChargeSFX;
+		public AudioSource SFXPlayer;
+
 		void Start()
 		{
 			m_Animator = GetComponent<Animator>();
@@ -206,7 +209,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 			// check whether conditions are right to allow a jump:
 			//if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
 			if (!m_ChargingJump && jump && m_JumpCount < 2)
+			{
 				m_ChargingJump = true;
+				SFXPlayer.clip = ChargeSFX;
+				SFXPlayer.Play();
+			}
 			else if (!jump && m_ChargingJump && !crouch)
 			{
 				float chargedJumpPower = 1 + Mathf.Min(m_currentChargeDuration, m_MaxChargeJumpDuration) * 0.5f;

@@ -10,6 +10,7 @@ public abstract class AEntityBase : MonoBehaviour
         this.HP -= damage;
         StartCoroutine(this.DisplayDamageReceived());
         Debug.Log("remaining HP: " + HP);
+        PlaySFX();
     }
 
     protected IEnumerator DisplayDamageReceived()
@@ -27,4 +28,6 @@ public abstract class AEntityBase : MonoBehaviour
             materials[i].material.color = originalColors[i];
         }
     }
+
+    protected abstract void PlaySFX();
 }

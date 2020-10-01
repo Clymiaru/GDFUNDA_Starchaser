@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AimBehavior : MonoBehaviour
 {
+    public AudioClip firingSFX;
+    public AudioSource SFXPlayer;
     [SerializeField] private ParticleSystem part;
     private List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
     // Start is called before the first frame update
@@ -36,6 +38,8 @@ public class AimBehavior : MonoBehaviour
 
     private void Attack()
     {
+        SFXPlayer.clip = firingSFX;
+        SFXPlayer.Play();
         part.Play();
     }
 
