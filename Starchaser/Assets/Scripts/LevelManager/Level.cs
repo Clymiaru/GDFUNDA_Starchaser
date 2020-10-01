@@ -1,16 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-public enum Rank
-{
-    None,
-    RankD,
-    RankC,
-    RankB,
-    RankA,
-    RankS
-}
-
 [Serializable]
 public struct TimeData
 {
@@ -38,27 +28,15 @@ public class Level : ScriptableObject
     [Header("Level Information")]
     [SerializeField] private string levelName;
     [SerializeField] private Sprite levelImage;
-    [SerializeField] private TimeData timeRequiredForRankA;
-    [SerializeField] private TimeData timeRequiredForRankS;
     [SerializeField] private string levelSceneName;
-
-    // Level Data to Track for Saving
-    [Header("")]
     [SerializeField] private bool isUnlocked;
-    [SerializeField] private Rank achievedRank;
-    [SerializeField] private TimeData achievedTime;
 
     public string Name
     {
         get => levelName;
-        set => levelName = value;
     }
 
     public string LevelScene { get => levelSceneName; }
     public Sprite Image { get => levelImage; }
-    public TimeData ARankRequirement { get => timeRequiredForRankA; }
-    public TimeData SRankRequirement { get => timeRequiredForRankS; }
     public bool IsUnlocked { get => isUnlocked; }
-    public Rank AchievedRank { get => achievedRank; }
-    public TimeData AchievedTime { get => achievedTime; }
 }

@@ -86,16 +86,6 @@ public class LevelSelectionScreen : View
     {
         currentLevelLabel.text = level.Name;
         UpdateLevelImage(level);
-
-        //var achievedTime = levelData.AchievedTime;
-        //timeInfo.text = achievedTime.ToString();
-        //UpdateAchievedRankInfo(levelData.AchievedRank);
-
-        //var aData = levelData.ARankRequirement;
-        //rankARequirementInfo.text = aData.ToString();
-
-        //var sData = levelData.SRankRequirement;
-        //rankSRequirementInfo.text = sData.ToString();
     }
 
     private void UpdateLevelImage(Level level)
@@ -104,45 +94,8 @@ public class LevelSelectionScreen : View
         {
             currentLevelImage.sprite = level.Image;
         }
+        // Else Replace with a locked sprite
     }
-
-    //private void UpdateAchievedRankInfo(Rank rank)
-    //{
-    //    switch(rank)
-    //    {
-    //        case Rank.RankS:
-    //        {
-    //            rankInfo.text = "S";
-    //            rankInfo.color = new Color32(255, 255, 255, 255);
-    //            break;
-    //        }
-    //        case Rank.RankA:
-    //        {
-    //            rankInfo.text = "A";
-    //            rankInfo.color = new Color32(255, 255, 255, 255);
-    //            break;
-    //        }
-    //        case Rank.RankB:
-    //        {
-    //            rankInfo.text = "B";
-    //            rankInfo.color = new Color32(255, 255, 255, 255);
-    //            break;
-    //        }
-    //        case Rank.RankC:
-    //        {
-    //            rankInfo.text = "C";
-    //            rankInfo.color = new Color32(255, 255, 255, 255);
-    //            break;
-    //        }
-    //        case Rank.RankD:
-    //        {
-    //            rankInfo.text = "D";
-    //            rankInfo.color = new Color32(255, 255, 255, 255);
-    //            break;
-    //        }
-    //    }
-
-    //}
 
     private void HideButton(Button toHide) => toHide.interactable = false;
     private void ShowButton(Button toHide) => toHide.interactable = true;
